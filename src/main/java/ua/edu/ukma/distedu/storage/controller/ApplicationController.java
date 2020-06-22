@@ -46,13 +46,13 @@ public class ApplicationController {
     @GetMapping("/edit-product")
     public String editProduct(@ModelAttribute("productID") long id,Model model) {
         model.addAttribute("product",productService.findProductById(id));
+        model.addAttribute("groups",groupService.findAll());
         return "product-page";
     }
 
     @PostMapping("/request-edit-product")
     public String acceptEditProduct(@ModelAttribute Product product,Model model) {
-        //productService.update(product);
-
+        productService.update(product);
         return editProduct(product.getId(),model);
     }
 }

@@ -33,21 +33,25 @@
                    placeholder="Description">
 
             <span>Manufacturer</span>
-            <input type="text" id="manufacturer" name="manufacturer" th:value="*{product.producer}"
+            <input type="text" id="producer" name="producer" th:value="*{product.producer}"
                    placeholder="Manufacturer">
 
 
             <span>Group</span>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Separated link</a>
-            </div>
-<!--            <input type="text" class="dropdown-menu" id="group" name="group" th:value="*{product.group}"-->
-<!--                       placeholder="Group">-->
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                        id="dropdownMenuButton" data-toggle="dropdown"
+                        th:text="${product.group.name}"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                </button>
 
+                <div class="dropdown-menu" style="height: auto;max-height: 200px;overflow-x: hidden;" >
+                    <tr th:each="group : ${groups}">
+                        <span class="dropdown-item"th:value="*{product.group}" th:text="${group.name}"></span>
+
+                </div>
+            </div>
             <span>Price</span>
             <input type="number" id="price" name="price" th:value="*{product.price}"
                    placeholder="Price">
