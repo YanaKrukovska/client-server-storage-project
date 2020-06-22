@@ -16,6 +16,7 @@ public class Group {
     private String description;
 
     public Group() {
+        this("","");
     }
 
     public Group(String name, String description) {

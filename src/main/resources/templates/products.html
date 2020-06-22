@@ -31,7 +31,7 @@
             </form>
         </div>
         <br>
-        <form th:action="@{/add-product}" method="get">
+        <form th:action="@{/add-product}" method="get" target="_blank">
             <button type="submit" class="btn btn-lg btn-success btn-block">Add</button>
         </form>
         <br>
@@ -51,7 +51,6 @@
 
             <tbody>
 
-            <!--/*@thymesVar id="product" type="ua.edu.ukma.distedu.storage.persistence.model.Product"*/-->
             <tr th:each="product : ${products}">
                 <td class="align-middle"><span class="align-middle" th:text="${product.id}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${product.name}"></span></td>
@@ -59,22 +58,23 @@
                 <td class="align-middle"><span class="align-middle" th:text="${product.producer}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${product.price}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${product.amount}"></span></td>
+                <form th:action="@{/request-delete-product}" method="post">
+                    <td><input type="hidden" th:value="${product.id}" name="productID">
+                        <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
+                    </td>
+                </form>
                 <form th:action="@{/edit-product}" method="get" target="_blank">
                     <td><input type="hidden" th:value="${product.id}" name="productID" >
                         <button type="submit" class="btn btn-primary btn-block">Edit</button>
                     </td>
                 </form>
-                <form th:action="@{/request-delete-product}" method="post">
-                    <td><input type="hidden" th:value="${product.id}" name="productID" >
-                        <button type="submit" class="btn btn-danger btn-block">Delete</button>
-                    </td>
-                </form>
+
             </tbody>
         </table>
 
     </div>
 </main>
-<!-- start main -->
+<!-- end main -->
 
 <!-- Footer -->
 <footer class="page-footer font-small  fixed-bottom" style="background-color: #e3f2fd;">

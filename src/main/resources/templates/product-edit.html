@@ -8,7 +8,6 @@
 
 </head>
 
-<!--/*@thymesVar id="product" type="ua.edu.ukma.distedu.storage.persistence.model.Product"*/-->
 <!-- start main -->
 
 <body class="text-center">
@@ -51,10 +50,13 @@
             <input type="number" id="amount" name="amount" th:value="*{product.amount}"
                    placeholder="Amount">
             <span><br></span>
+            <span th:if="${error != null}" class="text-danger" th:text="${error.toString()}"></span>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
         </div>
     </form>
 </main>
+
+<!-- end main -->
 
 <!-- Footer -->
 <footer class="page-footer font-small  fixed-bottom" style="background-color: #e3f2fd;">
