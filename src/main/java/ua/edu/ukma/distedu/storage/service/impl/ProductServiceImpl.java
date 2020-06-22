@@ -45,6 +45,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+
+
+    @Override
     public void update(Product product) {
         Product productDB = productRepository.findProductById(product.getId());
         productDB.setName(product.getName());

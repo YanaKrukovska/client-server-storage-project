@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Products</title>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
+
+</head>
+<body>
+
+<!--/*@thymesVar id="product" type="ua.edu.ukma.distedu.storage.persistence.model.Product"*/-->
+<!-- start main -->
+<main style="padding-top: 50px; padding-bottom: 60px;">
+    <p class="text-center font-weight-bold" style="font-size: 30px">PRODUCTS</p>
+    <div class="container">
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Group</th>
+                <th scope="col">Manufacturer</th>
+                <th scope="col">Price</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Edit</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="product : ${products}">
+                <td><span th:text="${product.id}"></span></td>
+                <td><span th:text="${product.name}"></span></td>
+                <td><span th:text="${product.getGroup().name}"></span></td>
+                <td><span th:text="${product.producer}"></span></td>
+                <td><span th:text="${product.price}"></span></td>
+                <td><span th:text="${product.amount}"></span></td>
+                <form th:action="@{/edit-product}" method="get" target="_blank">
+                    <td><input type="hidden" th:value="${product.id}" name="productID" >
+                        <button type="submit" class="btn btn-lg btn-primary btn-block">Edit</button>
+                    </td>
+                </form>
+            </tbody>
+        </table>
+
+    </div>
+</main>
+<!-- start main -->
+
+<!-- Footer -->
+<footer class="page-footer font-small  fixed-bottom" style="background-color: #e3f2fd;">
+    <div class="footer-copyright text-center py-3">© 2020 Copyright:
+        <a class="developers"> Krukovska Yana, Levchuk Volodymyr, Shcherbyna Serhii</a>
+    </div>
+</footer>
+<!-- Footer -->
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+</html>

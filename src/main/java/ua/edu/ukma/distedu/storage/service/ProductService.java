@@ -19,4 +19,6 @@ public interface ProductService {
 
     List<Product> findAllByGroup(Group group);
 
+    List<Product> findAll();
+
 }
