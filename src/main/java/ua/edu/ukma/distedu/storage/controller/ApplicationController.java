@@ -55,7 +55,7 @@ public class ApplicationController {
     @GetMapping("/products")
     public String products(Model model) {
         model.addAttribute("groupId", 0);
-        return productsByGroup(0l,model);
+        return productsByGroup(0L,model);
     }
 
     @GetMapping("/add-product")
