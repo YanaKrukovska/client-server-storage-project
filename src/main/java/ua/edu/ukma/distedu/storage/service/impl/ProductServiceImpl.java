@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -42,6 +42,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findAllByGroup(Group group) {
         return productRepository.findAllByGroup(group);
+    }
+
+    @Override
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+
+    @Override
+    public double findOverallCost(Product product) {
+        return product.getAmount() * product.getPrice();
     }
 
     @Override

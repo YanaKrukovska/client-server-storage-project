@@ -11,4 +11,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findProductById(long id);
 
     List<Product> findAllByGroup(Group group);
+
 }
