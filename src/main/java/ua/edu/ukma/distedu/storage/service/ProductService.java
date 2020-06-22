@@ -21,4 +21,6 @@ public interface ProductService {
 
     List<Product> findAll();
 
+    double findOverallCost(Product product);
+
 }
