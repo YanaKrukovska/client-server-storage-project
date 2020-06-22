@@ -107,7 +107,7 @@ public class ApplicationController {
 
 
     @PostMapping("/request-delete-product")
-    public String acceptDeleteProduct(@ModelAttribute("productID") long id, Model model) {
+    public String requestDeleteProduct(@ModelAttribute("productID") long id, Model model) {
         productService.delete(productService.findProductById(id));
         return "redirect:/products";
     }
