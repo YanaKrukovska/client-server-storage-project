@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
     <title>Add group</title>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
-
+    <link href="../static/css/input.css" th:href="@{/css/input.css}" rel="stylesheet"/>
 </head>
 
 <!-- start main -->
 
 <body class="text-center">
-<main style="padding-top: 70px; padding-bottom: 60px;">
+<main>
     <!-- Navigation -->
     <!--/*@thymesVar id="notifications" type=""*/-->
     <div th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
@@ -21,19 +21,19 @@
     <form class="row d-flex justify-content-center" th:action="@{/request-edit-group}" enctype="multipart/form-data"
           method="post">
         <div class="col-lg-auto d-flex justify-content-center flex-column">
-            <input type="hidden" id="id" name="id" th:value="*{group.id}"
+            <input class="fields" type="hidden" id="id" name="id" th:value="*{group.id}"
                    placeholder="id">
 
-            <span>Name</span>
-            <input type="text" id="name" name="name" th:value="*{group.name}"
+            <span class="title">Name</span>
+            <input class="fields" type="text" id="name" name="name" th:value="*{group.name}"
                    placeholder="Name">
 
-            <span>Description</span>
-            <input type="text" id="description" name="description" th:value="*{group.description}"
+            <span class="title">Description</span>
+            <input class="fields" type="text" id="description" name="description" th:value="*{group.description}"
                    placeholder="Description">
 
             <br>
-            <span th:if="${error != null}" class="text-danger" th:text="${error.toString()}"></span>
+            <span th:class="error" th:if="${error != null}" class="text-danger" th:text="${error.toString()}"></span>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Edit</button>
         </div>
     </form>
