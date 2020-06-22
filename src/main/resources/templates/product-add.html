@@ -19,7 +19,7 @@
 
     <h1 class="h3 mb-3 font-weight-normal">Product</h1>
 
-    <form class="row d-flex justify-content-center" th:action="@{/request-edit-product}" enctype="multipart/form-data"
+    <form class="row d-flex justify-content-center" th:action="@{/request-add-product}" enctype="multipart/form-data"
           method="post">
         <div class="col-lg-auto d-flex justify-content-center flex-column">
             <input type="hidden" id="id" name="id" th:value="*{product.id}"
@@ -39,8 +39,10 @@
 
             <span>Group</span>
             <select id="groupId" name="groupId" th:value="*{groupId}">
-                <option th:each="group : ${groups}" th:value="${group.id}"
-                        th:text="${group.name}"></option>
+                <option selected th:text="Select" th:value=0>
+                </option>
+                <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}">
+                </option>
             </select>
 
             <span>Price</span>
@@ -51,7 +53,7 @@
             <input type="number" id="amount" name="amount" th:value="*{product.amount}"
                    placeholder="Amount">
             <span><br></span>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
+            <button class="btn btn-lg btn-success btn-block" type="submit">Add</button>
         </div>
     </form>
 </main>

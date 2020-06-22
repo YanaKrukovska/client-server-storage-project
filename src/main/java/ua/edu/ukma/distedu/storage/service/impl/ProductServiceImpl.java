@@ -53,7 +53,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void update(Product product) {
         Product productDB = productRepository.findProductById(product.getId());
-        System.err.println(productDB);
         productDB.setName(product.getName());
         productDB.setGroup(product.getGroup());
         productDB.setPrice(product.getPrice());

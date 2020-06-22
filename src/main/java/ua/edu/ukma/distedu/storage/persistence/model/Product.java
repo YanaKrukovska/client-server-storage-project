@@ -29,6 +29,7 @@ public class Product {
     private String description;
 
     public Product() {
+        this("",null,"",0,0,"");
     }
 
     public Product(String name, Group group, String producer, double price, double amount, String description) {
