@@ -51,7 +51,6 @@
 
             <tbody>
 
-            <!--/*@thymesVar id="product" type="ua.edu.ukma.distedu.storage.persistence.model.Product"*/-->
             <tr th:each="product : ${products}">
                 <td class="align-middle"><span class="align-middle" th:text="${product.id}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${product.name}"></span></td>
@@ -75,7 +74,7 @@
 
     </div>
 </main>
-<!-- start main -->
+<!-- end main -->
 
 <!-- Footer -->
 <footer class="page-footer font-small  fixed-bottom" style="background-color: #e3f2fd;">
