@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8"/>
+    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
     <title>Edit product</title>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
 
@@ -9,11 +10,17 @@
 
 <!--/*@thymesVar id="product" type="ua.edu.ukma.distedu.storage.persistence.model.Product"*/-->
 <!-- start main -->
+
 <body class="text-center">
+<main style="padding-top: 70px; padding-bottom: 60px;">
+    <!-- Navigation -->
+    <!--/*@thymesVar id="notifications" type=""*/-->
+    <div th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
+
     <h1 class="h3 mb-3 font-weight-normal">Product</h1>
 
     <form class="row d-flex justify-content-center" th:action="@{/request-edit-product}" enctype="multipart/form-data" method="post">
-        <div class="col-10 d-flex justify-content-center flex-column">
+        <div class="col-lg-auto d-flex justify-content-center flex-column">
             <input type="hidden"  id="id" name="id" th:value="*{product.id}"
                    placeholder="id">
 
@@ -21,13 +28,25 @@
             <input type="text" id="name" name="name" th:value="*{product.name}"
                    placeholder="Name">
 
-<!--            <span>Group</span>-->
-            <!--    <input type="text" class="from-control" id="group" name="breed" th:value="*{product.group}"-->
-            <!--           placeholder="Group">-->
+            <span>Description</span>
+            <input type="text" id="description" name="description" th:value="*{product.description}"
+                   placeholder="Description">
 
             <span>Manufacturer</span>
             <input type="text" id="manufacturer" name="manufacturer" th:value="*{product.producer}"
                    placeholder="Manufacturer">
+
+
+            <span>Group</span>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Separated link</a>
+            </div>
+<!--            <input type="text" class="dropdown-menu" id="group" name="group" th:value="*{product.group}"-->
+<!--                       placeholder="Group">-->
 
             <span>Price</span>
             <input type="number" id="price" name="price" th:value="*{product.price}"
@@ -40,7 +59,7 @@
             <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
         </div>
     </form>
-<!-- start main -->
+</main>
 
 <!-- Footer -->
 <footer class="page-footer font-small  fixed-bottom" style="background-color: #e3f2fd;">

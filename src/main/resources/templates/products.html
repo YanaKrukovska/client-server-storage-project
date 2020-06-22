@@ -1,14 +1,19 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8"/>
+    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
     <title>Products</title>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
 
 </head>
 <body>
 
-<!--/*@thymesVar id="product" type="ua.edu.ukma.distedu.storage.persistence.model.Product"*/-->
+<!-- Navigation -->
+<!--/*@thymesVar id="notifications" type=""*/-->
+<div th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
+
+
 <!-- start main -->
 <main style="padding-top: 50px; padding-bottom: 60px;">
     <p class="text-center font-weight-bold" style="font-size: 30px">PRODUCTS</p>
@@ -28,6 +33,7 @@
 
             <tbody>
 
+            <!--/*@thymesVar id="product" type="ua.edu.ukma.distedu.storage.persistence.model.Product"*/-->
             <tr th:each="product : ${products}">
                 <td><span th:text="${product.id}"></span></td>
                 <td><span th:text="${product.name}"></span></td>

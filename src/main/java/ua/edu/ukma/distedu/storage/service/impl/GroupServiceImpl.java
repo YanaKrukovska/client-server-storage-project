@@ -7,6 +7,8 @@ import ua.edu.ukma.distedu.storage.persistence.repository.GroupRepository;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.util.List;
+
 @Service
 public class GroupServiceImpl implements GroupService {
 
@@ -41,5 +43,10 @@ public class GroupServiceImpl implements GroupService {
         groupDB.setName(group.getName());
         groupDB.setDescription(group.getDescription());
         groupRepository.save(groupDB);
+    }
+
+    @Override
+    public List<Group> findAll() {
+        return groupRepository.findAll();
     }
 }

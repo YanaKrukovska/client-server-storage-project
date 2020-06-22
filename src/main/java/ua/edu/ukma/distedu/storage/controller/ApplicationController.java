@@ -31,6 +31,12 @@ public class ApplicationController {
         return "index";
     }
 
+    @GetMapping("/groups")
+    public String groups(Model model) {
+        model.addAttribute("groups",groupService.findAll());
+        return "products";
+    }
+
     @GetMapping("/products")
     public String products(Model model) {
         model.addAttribute("products",productService.findAll());
