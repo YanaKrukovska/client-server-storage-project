@@ -9,22 +9,50 @@
 </head>
 <body>
 
+<!-- Navigation -->
+<!--/*@thymesVar id="notifications" type=""*/-->
+<div th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
+
 
 <!-- start main -->
-<main style="padding-top: 110px; padding-bottom: 60px;">
+<main style="padding-top: 50px; padding-bottom: 60px;">
+
     <div class="container">
+        <p class="text-center font-weight-bold" style="font-size: 30px">GROUPS</p>
+        <br>
+        <form th:action="@{/add-group}" method="get" target="_blank">
+            <button type="submit" class="btn btn-lg btn-success btn-block">Add</button>
+        </form>
+        <br>
         <table class="table">
             <thead class="thead-light">
             <tr>
-                <th scope="col">Photo</th>
+                <th scope="col">ID</th>
                 <th scope="col">Name</th>
-                <th scope="col">Breed</th>
-                <th scope="col">Age</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Arrival date</th>
+                <th scope="col">Description</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
             </thead>
 
+            <tbody>
+
+            <tr th:each="group : ${groups}">
+                <td class="align-middle"><span class="align-middle" th:text="${group.id}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="${group.name}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="${group.description}"></span></td>
+                <form th:action="@{/request-delete-group}" method="post">
+                    <td><input type="hidden" th:value="${group.id}" name="groupID">
+                        <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this group?')">Delete</button>
+                    </td>
+                </form>
+                <form th:action="@{/edit-group}" method="get" target="_blank">
+                    <td><input type="hidden" th:value="${group.id}" name="groupID" >
+                        <button type="submit" class="btn btn-primary btn-block">Edit</button>
+                    </td>
+                </form>
+
+            </tbody>
         </table>
 
     </div>
@@ -34,7 +62,7 @@
 <!-- Footer -->
 <footer class="page-footer font-small  fixed-bottom" style="background-color: #e3f2fd;">
     <div class="footer-copyright text-center py-3">© 2020 Copyright:
-        <a class="developers"> Krukovska Yana and Synelnyk Mariia</a>
+        <a class="developers"> Krukovska Yana, Levchuk Volodymyr, Shcherbyna Serhii</a>
     </div>
 </footer>
 <!-- Footer -->

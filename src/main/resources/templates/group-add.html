@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+    <title>Add group</title>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
+
+</head>
+
+<!--/*@thymesVar id="product" type="ua.edu.ukma.distedu.storage.persistence.model.Product"*/-->
+<!-- start main -->
+
+<body class="text-center">
+<main style="padding-top: 70px; padding-bottom: 60px;">
+    <!-- Navigation -->
+    <!--/*@thymesVar id="notifications" type=""*/-->
+    <div th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
+
+    <h1 class="h3 mb-3 font-weight-normal">Group</h1>
+
+    <form class="row d-flex justify-content-center" th:action="@{/request-add-group}" enctype="multipart/form-data"
+          method="post">
+        <div class="col-lg-auto d-flex justify-content-center flex-column">
+            <input type="hidden" id="id" name="id" th:value="*{group.id}"
+                   placeholder="id">
+
+            <span>Name</span>
+            <input type="text" id="name" name="name" th:value="*{group.name}"
+                   placeholder="Name">
+
+            <span>Description</span>
+            <input type="text" id="description" name="description" th:value="*{group.description}"
+                   placeholder="Description">
+
+            <br>
+            <span th:if="${error != null}" class="text-danger" th:text="${error.toString()}"></span>
+            <button class="btn btn-lg btn-success btn-block" type="submit">Add</button>
+        </div>
+    </form>
+</main>
+
+<!-- Footer -->
+<footer class="page-footer font-small  fixed-bottom" style="background-color: #e3f2fd;">
+    <div class="footer-copyright text-center py-3">© 2020 Copyright:
+        <a class="developers"> Krukovska Yana, Levchuk Volodymyr, Shcherbyna Serhii</a>
+    </div>
+</footer>
+<!-- Footer -->
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+</html>
