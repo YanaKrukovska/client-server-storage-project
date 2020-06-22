@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" const="text/html;charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
-    <title>Edit product</title>
+    <title>Add product</title>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
 
 </head>
@@ -53,6 +53,7 @@
             <input type="number" id="amount" name="amount" th:value="*{product.amount}"
                    placeholder="Amount">
             <span><br></span>
+            <span th:if="${error != null}" class="text-danger" th:text="${error.toString()}"></span>
             <button class="btn btn-lg btn-success btn-block" type="submit">Add</button>
         </div>
     </form>

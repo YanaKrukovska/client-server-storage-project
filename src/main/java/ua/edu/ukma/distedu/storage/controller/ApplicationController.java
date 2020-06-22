@@ -27,6 +27,13 @@ public class ApplicationController {
         return "index";
     }
 
+    //todo
+    @PostMapping("/error")
+    public String error(Model model) {
+        return "index";
+    }
+
+
     @GetMapping("/groups")
     public String groups(Model model) {
         model.addAttribute("groups", groupService.findAll());
@@ -54,10 +61,26 @@ public class ApplicationController {
     @GetMapping("/add-product")
     public String addProduct(Model model) {
         Product product = new Product();
-        model.addAttribute("product", product);
+        if(model.getAttribute("product")==null) model.addAttribute("product", product);
         model.addAttribute("groups", groupService.findAll());
         model.addAttribute("groupId", 0);
         return "product-add";
+    }
+
+    @PostMapping("/request-add-product")
+    public String requestAddProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
+        String error = isValidProduct(product);
+        if(groupId==0){
+            error = "Select group";
+        }
+        if (error != null){
+            model.addAttribute("error",error);
+            model.addAttribute("product",product);
+            return addProduct(model);
+        }
+        product.setGroup(groupService.findGroupById(groupId));
+        productService.save(product);
+        return "redirect:/products";
     }
 
     @GetMapping("/edit-product")
@@ -72,24 +95,34 @@ public class ApplicationController {
 
     @PostMapping("/request-edit-product")
     public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
+        String error = isValidProduct(product);
+        if (error != null){
+            model.addAttribute("error",error);
+            return editProduct(product.getId(), model);
+        }
         product.setGroup(groupService.findGroupById(groupId));
         productService.update(product);
         return editProduct(product.getId(), model);
     }
 
-    @PostMapping("/request-add-product")
-    public String requestAddProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
-        if(groupId==0 || product.getName().equals("") || product.getProducer().equals("")){
-            //Throw error callback
-        }
-        //product.setGroup(groupService.findGroupById(groupId));
-        //productService.update(product);
-        return "redirect:/products";
-    }
 
     @PostMapping("/request-delete-product")
     public String acceptDeleteProduct(@ModelAttribute("productID") long id, Model model) {
         productService.delete(productService.findProductById(id));
         return "redirect:/products";
+    }
+
+    private static String isValidProduct(Product product){
+        String error = null;
+        if(product.getAmount()<0){
+            error = "Amount cannot be <0";
+        }
+        if(product.getPrice()<0){
+            error = "Price cannot be <0";
+        }
+        if(product.getName().equals("")){
+            error = "Name cannot be empty";
+        }
+        return error;
     }
 }

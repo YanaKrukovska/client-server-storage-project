@@ -31,7 +31,7 @@
             </form>
         </div>
         <br>
-        <form th:action="@{/add-product}" method="get">
+        <form th:action="@{/add-product}" method="get" target="_blank">
             <button type="submit" class="btn btn-lg btn-success btn-block">Add</button>
         </form>
         <br>
@@ -65,8 +65,8 @@
                     </td>
                 </form>
                 <form th:action="@{/request-delete-product}" method="post">
-                    <td><input type="hidden" th:value="${product.id}" name="productID" >
-                        <button type="submit" class="btn btn-danger btn-block">Delete</button>
+                    <td><input type="hidden" th:value="${product.id}" name="productID">
+                        <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
                     </td>
                 </form>
             </tbody>
