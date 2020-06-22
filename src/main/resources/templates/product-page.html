@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
     <title>Edit product</title>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
@@ -19,9 +19,10 @@
 
     <h1 class="h3 mb-3 font-weight-normal">Product</h1>
 
-    <form class="row d-flex justify-content-center" th:action="@{/request-edit-product}" enctype="multipart/form-data" method="post">
+    <form class="row d-flex justify-content-center" th:action="@{/request-edit-product}" enctype="multipart/form-data"
+          method="post">
         <div class="col-lg-auto d-flex justify-content-center flex-column">
-            <input type="hidden"  id="id" name="id" th:value="*{product.id}"
+            <input type="hidden" id="id" name="id" th:value="*{product.id}"
                    placeholder="id">
 
             <span>Name</span>
@@ -36,22 +37,12 @@
             <input type="text" id="producer" name="producer" th:value="*{product.producer}"
                    placeholder="Manufacturer">
 
-
             <span>Group</span>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button"
-                        id="dropdownMenuButton" data-toggle="dropdown"
-                        th:text="${product.group.name}"
-                        aria-haspopup="true"
-                        aria-expanded="false">
-                </button>
+            <select id="groupId" name="groupId" th:value="*{groupId}">
+                <option th:each="group : ${groups}" th:value="${group.id}"
+                        th:text="${group.name}"></option>
+            </select>
 
-                <div class="dropdown-menu" style="height: auto;max-height: 200px;overflow-x: hidden;" >
-                    <tr th:each="group : ${groups}">
-                        <span class="dropdown-item"th:value="*{product.group}" th:text="${group.name}"></span>
-
-                </div>
-            </div>
             <span>Price</span>
             <input type="number" id="price" name="price" th:value="*{product.price}"
                    placeholder="Price">

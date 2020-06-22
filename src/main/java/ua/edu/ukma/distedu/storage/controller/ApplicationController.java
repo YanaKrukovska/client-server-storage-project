@@ -6,13 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import ua.edu.ukma.distedu.storage.persistence.model.Group;
 import ua.edu.ukma.distedu.storage.persistence.model.Product;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class ApplicationController {
@@ -33,26 +29,28 @@ public class ApplicationController {
 
     @GetMapping("/groups")
     public String groups(Model model) {
-        model.addAttribute("groups",groupService.findAll());
+        model.addAttribute("groups", groupService.findAll());
         return "products";
     }
 
     @GetMapping("/products")
     public String products(Model model) {
-        model.addAttribute("products",productService.findAll());
+        model.addAttribute("products", productService.findAll());
         return "products";
     }
 
     @GetMapping("/edit-product")
-    public String editProduct(@ModelAttribute("productID") long id,Model model) {
-        model.addAttribute("product",productService.findProductById(id));
-        model.addAttribute("groups",groupService.findAll());
+    public String editProduct(@ModelAttribute("productID") long id, Model model) {
+        model.addAttribute("product", productService.findProductById(id));
+        model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("groupId", 0L);
         return "product-page";
     }
 
     @PostMapping("/request-edit-product")
-    public String acceptEditProduct(@ModelAttribute Product product,Model model) {
+    public String acceptEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
+        product.setGroup(groupService.findGroupById(groupId));
         productService.update(product);
-        return editProduct(product.getId(),model);
+        return editProduct(product.getId(), model);
     }
 }
