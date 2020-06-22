@@ -12,4 +12,5 @@ public interface GroupService {
 
     void update(Group group);
 
+    double findOverallCost(Group group);
 }

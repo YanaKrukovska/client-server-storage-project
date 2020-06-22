@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -49,6 +49,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll();
     }
 
+    @Override
+    public double findOverallCost(Product product) {
+        return product.getAmount() * product.getPrice();
+    }
 
     @Override
     public void update(Product product) {
