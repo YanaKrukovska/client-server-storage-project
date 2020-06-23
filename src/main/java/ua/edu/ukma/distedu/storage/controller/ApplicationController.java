@@ -11,6 +11,8 @@ import ua.edu.ukma.distedu.storage.persistence.model.Product;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.util.List;
+
 @Controller
 public class ApplicationController {
 
@@ -65,22 +67,35 @@ public class ApplicationController {
         return "redirect:/groups";
     }
 
-    @GetMapping("/products-by-group")
-    public String productsByGroup(@ModelAttribute("groupId") Long groupId, Model model) {
+    @GetMapping("/products-find")
+    public String productsByGroup(@ModelAttribute("groupId") Long groupId, @ModelAttribute("findProductId") Long findProductId,Model model) {
         model.addAttribute("groups", groupService.findAll());
         model.addAttribute("groupId", groupId);
+        model.addAttribute("findProductId",findProductId);
+        List<Product> productList = null;
         if (groupId == 0) {
-            model.addAttribute("products", productService.findAll());
+            productList = productService.findAll();
         } else {
-            model.addAttribute("products", productService.findAllByGroup(groupService.findGroupById(groupId)));
+            productList =  productService.findAllByGroup(groupService.findGroupById(groupId));
         }
+        if (findProductId!=0){
+            Product byID = productService.findProductById(findProductId);
+            if (productList.contains(byID)) {
+                productList.clear();
+                productList.add(byID);
+            } else {
+                productList.clear();
+            }
+        }
+        model.addAttribute("products",productList);
         return "products";
     }
 
     @GetMapping("/products")
     public String products(Model model) {
         model.addAttribute("groupId", 0);
-        return productsByGroup(0L, model);
+        model.addAttribute("findProductId", 0);
+        return productsByGroup(0L, 0L, model);
     }
 
     @GetMapping("/add-product")

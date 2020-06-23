@@ -11,7 +11,7 @@
 <!-- start main -->
 
 <body class="text-center">
-<main style="padding-top: 70px; padding-bottom: 60px;">
+<main>
     <!-- Navigation -->
     <!--/*@thymesVar id="notifications" type=""*/-->
     <div  class="nav" th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
@@ -48,6 +48,5 @@
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-
 </body>
 </html>
