@@ -29,6 +29,7 @@ public class Product {
     private String description;
 
     public Product() {
+        this("",null,"",0,0,"");
     }
 
     public Product(String name, Group group, String producer, double price, double amount, String description) {
@@ -94,5 +95,18 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", group=" + group +
+                ", producer='" + producer + '\'' +
+                ", price=" + price +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

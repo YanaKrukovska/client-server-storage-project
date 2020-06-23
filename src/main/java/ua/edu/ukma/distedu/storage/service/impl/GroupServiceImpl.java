@@ -47,6 +47,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<Group> findAll() {
+        return groupRepository.findAll();
+    }
+
+    @Override
     public double findOverallCost(Group group) {
 
         List<Product> products = productService.findAllByGroup(group);

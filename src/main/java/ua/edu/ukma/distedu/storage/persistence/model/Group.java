@@ -16,6 +16,7 @@ public class Group {
     private String description;
 
     public Group() {
+        this("","");
     }
 
     public Group(String name, String description) {
@@ -45,5 +46,14 @@ public class Group {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
