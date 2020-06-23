@@ -29,8 +29,8 @@
                    placeholder="Name">
 
             <span class="title">Description</span>
-            <input class="fields" type="text" id="description" name="description" th:value="*{group.description}"
-                   placeholder="Description">
+            <textarea class="fields" type="text" id="description" name="description" th:value="*{group.description}" th:text="*{group.description}"
+                      placeholder="Description"></textarea>
 
             <br>
             <span th:class="error" th:if="${error != null}" class="text-danger" th:text="${error.toString()}"></span>

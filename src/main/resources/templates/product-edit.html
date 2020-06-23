@@ -28,12 +28,12 @@
                    placeholder="Name">
 
             <span class="title">Description</span>
-            <input class="fields" type="text" id="description" name="description" th:value="*{product.description}"
-                   placeholder="Description">
+            <textarea class="fields" type="text" id="description" name="description" th:value="*{product.description}" th:text="*{product.description}"
+                   placeholder="Description"></textarea>
 
             <span class="title">Manufacturer</span>
             <input class="fields" type="text" id="producer" name="producer" th:value="*{product.producer}"
-                   placeholder="Manufacturer">
+                      placeholder="Manufacturer">
 
             <span class="title">Group</span>
             <select class="limited-drop-down" id="groupId" name="groupId" th:value="*{groupId}" style="width: 450px; height: 40px">
