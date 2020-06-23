@@ -1,13 +1,12 @@
 package ua.edu.ukma.distedu.storage.persistence.model;
 
-
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "user_roles_relations")
+@Table(name = "user_roles")
 public class Role implements GrantedAuthority {
 
     @Id
