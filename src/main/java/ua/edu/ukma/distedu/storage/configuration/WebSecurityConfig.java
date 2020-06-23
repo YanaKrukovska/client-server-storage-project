@@ -28,13 +28,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         httpSecurity
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/login", "/registration").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/css/**", "/static/**",
                         "/js/**",
                         "/images/**",
                         "/webjars/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .failureForwardUrl("/login-processing")
+                .loginProcessingUrl("/login-processing")
+                .defaultSuccessUrl("/products", true)
+                .permitAll();
 
 
         httpSecurity.csrf().disable();
