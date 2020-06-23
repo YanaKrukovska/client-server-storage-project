@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
     <title>Edit product</title>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
-    <link href="../static/css/input.css" th:href="@{/css/input.css}" rel="stylesheet"/>
+    <link href="../static/css/product-actions.css" th:href="@{/css/product-actions.css}" rel="stylesheet"/>
 </head>
 
 <!-- start main -->
@@ -13,7 +13,7 @@
 <main>
     <!-- Navigation -->
     <!--/*@thymesVar id="notifications" type=""*/-->
-    <div th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
+    <div class="nav"  th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
 
     <h1 class="h3 mb-3 font-weight-normal">Product</h1>
 
@@ -36,7 +36,7 @@
                    placeholder="Manufacturer">
 
             <span class="title">Group</span>
-            <select class="limited-drop-down" id="groupId" name="groupId" th:value="*{groupId}" style="width: 300px; height: 40px">
+            <select class="limited-drop-down" id="groupId" name="groupId" th:value="*{groupId}" style="width: 450px; height: 40px">
                 <option th:each="group : ${groups}" th:value="${group.id}" th:text="${group.name}"
                         th:selected="${group.id==product.group.id}">
                 </option>

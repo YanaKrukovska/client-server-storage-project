@@ -1,7 +1,7 @@
 html,
 body {
     height: 100%;
-    overflow: auto;
+    width:100%;
 }
 
 body {
@@ -10,13 +10,12 @@ body {
     display: flex;
     -ms-flex-align: center;
     -ms-flex-pack: center;
-    -webkit-box-align: center;
     align-items: center;
-    -webkit-box-pack: center;
     justify-content: center;
-    padding-top: 20px;
-    padding-bottom: 40px;
+    overflow: auto;
+    margin-top: 150px;
 }
+
 
 .title {
     font-size: 20px;
@@ -25,8 +24,7 @@ body {
 }
 
 .fields {
-    width: 100%;
-    max-width: 330px;
+    width: 450px;
     margin: 0 auto;
     position: relative;
     box-sizing: border-box;
@@ -37,7 +35,6 @@ body {
 
 .fields input[type="text"] {
     height: 40px;
-    width: 300px;
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
@@ -45,16 +42,17 @@ body {
 
 .fields input[type="number"] {
     height: 40px;
-    width: 300px;
     margin-bottom: -1px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
 
+
 .btn {
-    width: 300px;
+    width: 450px;
     position: relative;
     box-sizing: border-box;
+    margin-bottom: 100px;
 }
 
 .error {
