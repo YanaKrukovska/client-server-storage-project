@@ -1,12 +1,13 @@
 package ua.edu.ukma.distedu.storage.service;
 
 import ua.edu.ukma.distedu.storage.persistence.model.Group;
+import ua.edu.ukma.distedu.storage.persistence.model.Response;
 
 import java.util.List;
 
 public interface GroupService {
 
-    Group save(Group group);
+    Response<Group> save(Group group);
 
     void delete(Group group);
 
@@ -15,6 +16,7 @@ public interface GroupService {
     void update(Group group);
 
     double findOverallCost(Group group);
+
     List<Group> findAll();
 
 }

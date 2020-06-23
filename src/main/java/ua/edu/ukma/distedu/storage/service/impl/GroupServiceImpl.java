@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.edu.ukma.distedu.storage.persistence.model.Group;
 import ua.edu.ukma.distedu.storage.persistence.model.Product;
+import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.repository.GroupRepository;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
@@ -23,8 +24,14 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group save(Group group) {
-        return groupRepository.save(group);
+    public Response<Group> save(Group group) {
+        Group groupDB = groupRepository.findGroupByName(group.getName());
+
+        if (groupDB != null) {
+            return new Response<>(group, "Name of the group must be unique");
+        }
+
+        return new Response<>(groupRepository.save(group), "");
     }
 
     @Override

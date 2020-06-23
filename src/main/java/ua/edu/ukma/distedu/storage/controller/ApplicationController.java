@@ -62,7 +62,13 @@ public class ApplicationController {
             model.addAttribute("group", group);
             return addGroup(model);
         }
-        groupService.save(group);
+
+        Response<Group> responseGroup = groupService.save(group);
+        if (!responseGroup.isOkay()) {
+            model.addAttribute("error", responseGroup.getErrorMessage());
+            model.addAttribute("group", responseGroup.getObject());
+            return addGroup(model);
+        }
         return "redirect:/groups";
     }
 
@@ -86,7 +92,7 @@ public class ApplicationController {
 
     @GetMapping("/add-product")
     public String addProduct(Model model) {
-        if (model.getAttribute("product") == null){
+        if (model.getAttribute("product") == null) {
             model.addAttribute("product", new Product());
             model.addAttribute("groupId", 0);
         }
