@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.edu.ukma.distedu.storage.persistence.model.Group;
 import ua.edu.ukma.distedu.storage.persistence.model.Product;
+import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.repository.ProductRepository;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
@@ -20,8 +21,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product save(Product product) {
-        return productRepository.save(product);
+    public Response<Product> save(Product product) {
+        Product productDB = productRepository.findProductByName(product.getName());
+
+        if (productDB != null) {
+            return new Response<>(product, "Name of the product must be unique");
+        }
+
+        return new Response<>(productRepository.save(product), "");
     }
 
     @Override

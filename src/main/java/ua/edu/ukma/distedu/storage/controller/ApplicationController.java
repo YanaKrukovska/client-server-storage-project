@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ua.edu.ukma.distedu.storage.persistence.model.Group;
 import ua.edu.ukma.distedu.storage.persistence.model.Product;
+import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
@@ -85,9 +86,11 @@ public class ApplicationController {
 
     @GetMapping("/add-product")
     public String addProduct(Model model) {
-        if (model.getAttribute("product") == null) model.addAttribute("product", new Product());
+        if (model.getAttribute("product") == null){
+            model.addAttribute("product", new Product());
+            model.addAttribute("groupId", 0);
+        }
         model.addAttribute("groups", groupService.findAll());
-        model.addAttribute("groupId", 0);
         return "product-add";
     }
 
@@ -103,7 +106,14 @@ public class ApplicationController {
             return addProduct(model);
         }
         product.setGroup(groupService.findGroupById(groupId));
-        productService.save(product);
+
+        Response<Product> responseProduct = productService.save(product);
+        if (!responseProduct.isOkay()) {
+            model.addAttribute("error", responseProduct.getErrorMessage());
+            model.addAttribute("product", responseProduct.getObject());
+            model.addAttribute("groupId", responseProduct.getObject().getGroup().getId());
+            return addProduct(model);
+        }
         return "redirect:/products";
     }
 

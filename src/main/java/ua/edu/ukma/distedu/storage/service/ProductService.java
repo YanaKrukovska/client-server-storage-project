@@ -2,12 +2,13 @@ package ua.edu.ukma.distedu.storage.service;
 
 import ua.edu.ukma.distedu.storage.persistence.model.Group;
 import ua.edu.ukma.distedu.storage.persistence.model.Product;
+import ua.edu.ukma.distedu.storage.persistence.model.Response;
 
 import java.util.List;
 
 public interface ProductService {
 
-    Product save(Product product);
+    Response<Product> save(Product product);
 
     void delete(Product product);
 
