@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
     <title>Groups</title>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
@@ -43,11 +43,13 @@
                 <td class="align-middle"><span class="align-middle" th:text="${group.description}"></span></td>
                 <form th:action="@{/request-delete-group}" method="post">
                     <td><input type="hidden" th:value="${group.id}" name="groupID">
-                        <button type="submit" class="btn btn-danger btn-block" style="padding: 0px" onclick="return confirm('Are you sure you want to delete this group?')">Delete</button>
+                        <button type="submit" class="btn btn-danger btn-block" style="padding: 0px"
+                                onclick="return confirm('Are you sure you want to delete this group?')">Delete
+                        </button>
                     </td>
                 </form>
                 <form th:action="@{/edit-group}" method="get" target="_blank">
-                    <td><input type="hidden" th:value="${group.id}" name="groupID" >
+                    <td><input type="hidden" th:value="${group.id}" name="groupID">
                         <button type="submit" class="btn btn-primary btn-block" style="padding: 0px">Inspect</button>
                     </td>
                 </form>
@@ -60,11 +62,7 @@
 <!-- end main -->
 
 <!-- Footer -->
-<footer class="page-footer font-small  fixed-bottom" style="background-color: #e3f2fd;">
-    <div class="footer-copyright text-center py-3">© 2020 Copyright:
-        <a class="developers"> Krukovska Yana, Levchuk Volodymyr, Shcherbyna Serhii</a>
-    </div>
-</footer>
+<div th:replace="fragments/footer.html :: footer"></div>
 <!-- Footer -->
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
