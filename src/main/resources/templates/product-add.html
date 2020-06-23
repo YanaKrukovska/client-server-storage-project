@@ -8,13 +8,15 @@
     <link href="../static/css/input.css" th:href="@{/css/input.css}" rel="stylesheet"/>
 </head>
 
-<!-- start main -->
 
 <body class="text-center">
-<main>
-    <!-- Navigation -->
-    <!--/*@thymesVar id="notifications" type=""*/-->
-    <div th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
+
+<!-- Navigation -->
+<!--/*@thymesVar id="notifications" type=""*/-->
+<div th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
+
+<!-- start main -->
+<main class="container">
 
     <h1 class="h3 mb-3 font-weight-normal">Product</h1>
 
@@ -29,8 +31,8 @@
                    placeholder="Name">
 
             <span class="title">Description</span>
-            <input class="fields" type="text" id="description" name="description" th:value="*{product.description}"
-                   placeholder="Description">
+            <textarea class="fields" type="text" id="description" name="description" th:value="*{product.description}" th:text="*{product.description}"
+                   placeholder="Description"></textarea>
 
             <span class="title">Manufacturer</span>
             <input class="fields" type="text" id="producer" name="producer" th:value="*{product.producer}"
@@ -51,7 +53,7 @@
             <span class="title">Amount</span>
             <input class="fields" type="number" id="amount" name="amount" th:value="*{product.amount}"
                    placeholder="Amount">
-            <span><br></span>
+            <br>
             <span th:class="error" th:if="${error != null}" class="text-danger" th:text="${error.toString()}"></span>
             <button class="btn btn-lg btn-success btn-block" type="submit">Add</button>
         </div>

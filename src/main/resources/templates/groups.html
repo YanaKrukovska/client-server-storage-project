@@ -43,12 +43,12 @@
                 <td class="align-middle"><span class="align-middle" th:text="${group.description}"></span></td>
                 <form th:action="@{/request-delete-group}" method="post">
                     <td><input type="hidden" th:value="${group.id}" name="groupID">
-                        <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to delete this group?')">Delete</button>
+                        <button type="submit" class="btn btn-danger btn-block" style="padding: 0px" onclick="return confirm('Are you sure you want to delete this group?')">Delete</button>
                     </td>
                 </form>
                 <form th:action="@{/edit-group}" method="get" target="_blank">
                     <td><input type="hidden" th:value="${group.id}" name="groupID" >
-                        <button type="submit" class="btn btn-primary btn-block">Edit</button>
+                        <button type="submit" class="btn btn-primary btn-block" style="padding: 0px">Inspect</button>
                     </td>
                 </form>
 
