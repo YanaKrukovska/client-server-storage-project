@@ -1,6 +1,8 @@
 package ua.edu.ukma.distedu.storage.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +23,10 @@ public class AuthorizationController {
     }
 
     @GetMapping("/registration")
-    public String registration(Model model) {
+    public String registration(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+        if (currentUser != null) {
+            return "redirect:/products";
+        }
         if (model.getAttribute("user") == null) {
             model.addAttribute("user", new User());
         }
@@ -30,19 +35,21 @@ public class AuthorizationController {
 
     @PostMapping("/registration")
     public String addUser(@ModelAttribute User user, Model model) {
-
         Response<User> responseUser = userService.addUser(user);
         if (!responseUser.isOkay()) {
             model.addAttribute("errors", responseUser.getErrorMessage());
             model.addAttribute("user", responseUser.getObject());
-            return registration(model);
+            return registration(model, null);
         }
         return "redirect:/login";
     }
 
 
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+        if (currentUser != null) {
+            return "redirect:/products";
+        }
         if (model.getAttribute("user") == null) {
             model.addAttribute("user", new User());
         }
@@ -51,12 +58,11 @@ public class AuthorizationController {
 
     @PostMapping("/login-processing")
     public String loginUser(@ModelAttribute User user, Model model) {
-
         Response<User> loginResponse = userService.letUserLogIn(user);
         if (!loginResponse.isOkay()) {
             model.addAttribute("errors", loginResponse.getErrorMessage());
             model.addAttribute("user", loginResponse.getObject());
-            return login(model);
+            return login(model, null);
         }
         return "redirect:/";
     }
