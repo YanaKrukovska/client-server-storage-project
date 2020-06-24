@@ -1,20 +1,22 @@
 package ua.edu.ukma.distedu.storage.persistence.model;
 
+import java.util.List;
+
 public class Response<T> {
 
-    private String errorMessage;
+    private List<String> errorMessage;
     private T object;
 
-    public Response(T object, String errorMessage) {
+    public Response(T object, List<String> errorMessage) {
         this.object = object;
         this.errorMessage = errorMessage;
     }
 
-    public String getErrorMessage() {
+    public List<String> getErrorMessage() {
         return errorMessage;
     }
 
-    public void setErrorMessage(String errorMessage) {
+    public void setErrorMessage(List<String> errorMessage) {
         this.errorMessage = errorMessage;
     }
 
@@ -26,7 +28,7 @@ public class Response<T> {
         this.object = object;
     }
 
-    public boolean isOkay(){
-        return errorMessage.isEmpty();
+    public boolean isOkay() {
+        return errorMessage.size() == 0;
     }
 }

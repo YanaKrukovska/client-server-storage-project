@@ -8,6 +8,9 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.repository.ProductRepository;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -25,10 +28,10 @@ public class ProductServiceImpl implements ProductService {
         Product productDB = productRepository.findProductByName(product.getName());
 
         if (productDB != null) {
-            return new Response<>(product, "Name of the product must be unique");
+            return new Response<>(product, new LinkedList<>(Collections.singletonList("Name of the product must be unique")));
         }
 
-        return new Response<>(productRepository.save(product), "");
+        return new Response<>(productRepository.save(product), new LinkedList<>());
     }
 
     @Override

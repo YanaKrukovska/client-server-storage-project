@@ -1,12 +1,15 @@
 package ua.edu.ukma.distedu.storage.service;
 
+import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.model.User;
 
 import java.util.List;
 
 public interface UserService {
 
-    boolean addUser(User user);
+    Response<User> addUser(User user);
+
+    List<String> validateUser(User user);
 
     User findUserById(long id);
 

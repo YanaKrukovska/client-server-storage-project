@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.model.User;
 import ua.edu.ukma.distedu.storage.service.PasswordService;
 import ua.edu.ukma.distedu.storage.service.UserService;
@@ -24,39 +25,25 @@ public class AuthorizationController {
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        model.addAttribute("user", new User());
+        if (model.getAttribute("user") == null) {
+            model.addAttribute("user", new User());
+        }
         return "registration";
     }
 
     @PostMapping("/registration")
     public String addUser(@ModelAttribute User user, Model model) {
-        if (user.getUsername().equals("")) {
-            model.addAttribute("usernameError", "usernameError");
-            return "registration";
-        }
 
-        if (user.getEmail().equals("")) {
-            model.addAttribute("mailError", "mailError");
-            return "registration";
-        }
-
-        if (user.getPassword().equals("")) {
-            model.addAttribute("passwordError", "passwordError");
-            return "registration";
-        }
-
-        if (!passwordService.comparePasswordAndConfirmationPassword(user.getPassword(), user.getPasswordConfirm())) {
-            model.addAttribute("passwordConfirmError", "passwordConfirmError");
-            return "registration";
-        }
-
-        if (!userService.addUser(user)) {
-            model.addAttribute("logError", "logError");
-            return "registration";
+        Response<User> responseUser = userService.addUser(user);
+        if (!responseUser.isOkay()) {
+            model.addAttribute("errors", responseUser.getErrorMessage());
+            model.addAttribute("user", responseUser.getObject());
+            return registration(model);
         }
 
         return "redirect:/login";
     }
+
 
     @GetMapping("/login")
     public String login(Model model) {

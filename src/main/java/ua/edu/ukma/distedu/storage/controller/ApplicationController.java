@@ -64,7 +64,7 @@ public class ApplicationController {
         }
 
         Response<Group> responseGroup = groupService.save(group);
-        if (!responseGroup.isOkay()) {
+        if (responseGroup.isOkay()) {
             model.addAttribute("error", responseGroup.getErrorMessage());
             model.addAttribute("group", responseGroup.getObject());
             return addGroup(model);
@@ -114,7 +114,7 @@ public class ApplicationController {
         product.setGroup(groupService.findGroupById(groupId));
 
         Response<Product> responseProduct = productService.save(product);
-        if (!responseProduct.isOkay()) {
+        if (responseProduct.isOkay()) {
             model.addAttribute("error", responseProduct.getErrorMessage());
             model.addAttribute("product", responseProduct.getObject());
             model.addAttribute("groupId", responseProduct.getObject().getGroup().getId());

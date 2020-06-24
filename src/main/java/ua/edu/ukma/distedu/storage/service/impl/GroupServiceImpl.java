@@ -9,6 +9,9 @@ import ua.edu.ukma.distedu.storage.persistence.repository.GroupRepository;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -28,10 +31,10 @@ public class GroupServiceImpl implements GroupService {
         Group groupDB = groupRepository.findGroupByName(group.getName());
 
         if (groupDB != null) {
-            return new Response<>(group, "Name of the group must be unique");
+            return new Response<>(group, new LinkedList<>(Collections.singletonList("Name of the group must be unique")));
         }
 
-        return new Response<>(groupRepository.save(group), "");
+        return new Response<>(groupRepository.save(group), new LinkedList<>());
     }
 
     @Override

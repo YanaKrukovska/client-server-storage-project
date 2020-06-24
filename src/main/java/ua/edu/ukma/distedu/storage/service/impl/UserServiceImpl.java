@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.model.Role;
 import ua.edu.ukma.distedu.storage.persistence.model.User;
 import ua.edu.ukma.distedu.storage.persistence.repository.UserRepository;
@@ -12,6 +13,7 @@ import ua.edu.ukma.distedu.storage.service.PasswordService;
 import ua.edu.ukma.distedu.storage.service.UserService;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -27,23 +29,51 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public boolean addUser(User user) {
+    public Response<User> addUser(User user) {
 
-        User checkUsername = userRepository.findUserByUsername(user.getUsername());
-        User checkEmail = userRepository.findUserByEmail(user.getEmail());
+        List<String> errors = validateUser(user);
 
-        if (checkUsername != null) {
-            return false;
+        if (errors.size() != 0) {
+            return new Response<>(user, errors);
         }
 
-        if (checkEmail != null) {
-            return false;
+        if (userRepository.findUserByUsername(user.getUsername()) != null) {
+            errors.add("User with such username already exists");
+            return new Response<>(user, errors);
         }
 
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
+        if (userRepository.findUserByEmail(user.getEmail()) != null) {
+            errors.add("User with such email already exists");
+            return new Response<>(user, errors);
+        }
+
+        if (!passwordService.comparePasswordAndConfirmationPassword(user.getPassword(), user.getPasswordConfirm())) {
+            errors.add("Passwords are different");
+            return new Response<>(user, errors);
+        }
+
+        user.setRoles(Collections.singleton(new Role(1L, "ROLE_ADMIN")));
         user.setPassword(passwordService.encodePassword(user.getPassword()));
-        userRepository.save(user);
-        return true;
+        return new Response<>(userRepository.save(user), new LinkedList<>());
+    }
+
+    @Override
+    public List<String> validateUser(User user) {
+
+        List<String> errors = new LinkedList<>();
+        if (user.getUsername().equals("")) {
+            errors.add("Username can't be empty");
+        }
+
+        if (user.getEmail().equals("")) {
+            errors.add("Email can't be empty");
+        }
+
+        if (user.getPassword().equals("")) {
+            errors.add("Password can't be empty");
+        }
+
+        return errors;
     }
 
     @Override
