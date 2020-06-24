@@ -7,13 +7,13 @@
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
     <link href="../static/css/error.css" th:href="@{/css/error.css}" rel="stylesheet"/>
 </head>
-
 <body>
 <div>
+    <img src="https://pbs.twimg.com/media/EMX9ColXYAAW438.jpg" width="400" height="350">
     <form class="info" th:action="@{/products}" method="get">
         <h1 class="h3 mb-3 font-weight-normal" id="error-banner">Something went wrong!</h1>
         <span class="text-info" th:text="${message}"></span>
-        <button type="submit" class="btn btn-primary">Return to main page</button>
+        <button type="submit" class="btn btn-primary">Return to the main page</button>
     </form>
 </div>
 </body>
