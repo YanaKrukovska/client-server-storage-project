@@ -9,11 +9,13 @@ public interface GroupService {
 
     Response<Group> save(Group group);
 
+    List<String> validateGroup(Group group);
+
     void delete(Group group);
 
     Group findGroupById(long id);
 
-    void update(Group group);
+    Response<Group> update(Group group);
 
     double findOverallCost(Group group);
 

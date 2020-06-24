@@ -33,7 +33,11 @@
                       placeholder="Description"></textarea>
 
             <br>
-            <span th:class="error" th:if="${error != null}" class="text-danger" th:text="${error.toString()}"></span>
+
+            <tr th:each="error :${errors}">
+                <span class="text-danger" th:text="${error.toString()}"></span>
+            </tr>
+
             <button class="btn btn-lg btn-success btn-block" type="submit">Add</button>
         </div>
     </form>

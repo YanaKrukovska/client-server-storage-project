@@ -9,8 +9,6 @@ import ua.edu.ukma.distedu.storage.persistence.repository.GroupRepository;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,13 +26,31 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Response<Group> save(Group group) {
-        Group groupDB = groupRepository.findGroupByName(group.getName());
-
-        if (groupDB != null) {
-            return new Response<>(group, new LinkedList<>(Collections.singletonList("Name of the group must be unique")));
+        List<String> errors = validateGroup(group);
+        if (errors.size() != 0) {
+            return new Response<>(group, errors);
         }
 
-        return new Response<>(groupRepository.save(group), new LinkedList<>());
+        if (groupRepository.findGroupByName(group.getName()) != null) {
+            errors.add("Name of the group must be unique");
+            return new Response<>(group, errors);
+        }
+
+        return new Response<>(groupRepository.save(group), errors);
+    }
+
+    @Override
+    public List<String> validateGroup(Group group) {
+        List<String> errors = new LinkedList<>();
+        if (group.getName().equals("")) {
+            errors.add("Group name can't be empty");
+        }
+
+        if (group.getDescription().equals("")) {
+            errors.add("Description can't be empty");
+        }
+
+        return errors;
     }
 
     @Override
@@ -49,11 +65,23 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void update(Group group) {
+    public Response<Group> update(Group group) {
+
+        List<String> errors = validateGroup(group);
+        if (errors.size() != 0) {
+            return new Response<>(group, errors);
+        }
+
+        if (groupRepository.findGroupByName(group.getName()) != null &&
+                groupRepository.findGroupByName(group.getName()).getId() != group.getId()) {
+            errors.add("Group with such name already exists");
+            return new Response<>(group, errors);
+        }
+
         Group groupDB = groupRepository.findGroupById(group.getId());
         groupDB.setName(group.getName());
         groupDB.setDescription(group.getDescription());
-        groupRepository.save(groupDB);
+        return new Response<>(groupRepository.save(groupDB), errors);
     }
 
     @Override

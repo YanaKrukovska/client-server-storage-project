@@ -50,23 +50,17 @@ public class ApplicationController {
 
     @GetMapping("/add-group")
     public String addGroup(Model model) {
-        if (model.getAttribute("group") == null) model.addAttribute("group", new Group());
+        if (model.getAttribute("group") == null) {
+            model.addAttribute("group", new Group());
+        }
         return "group-add";
     }
 
     @PostMapping("/request-add-group")
     public String requestAddGroup(@ModelAttribute Group group, Model model) {
-        String error = isValidGroup(group);
-        if (error != null) {
-            model.addAttribute("error", error);
-            model.addAttribute("group", group);
-            return addGroup(model);
-        }
-
-        Response<Group> responseGroup = groupService.save(group);
-        if (responseGroup.isOkay()) {
-            model.addAttribute("error", responseGroup.getErrorMessage());
-            model.addAttribute("group", responseGroup.getObject());
+        Response<Group> groupResponse = groupService.save(group);
+        if (!groupResponse.isOkay()) {
+            model.addAttribute("errors", groupResponse.getErrorMessage());
             return addGroup(model);
         }
         return "redirect:/groups";
@@ -132,12 +126,12 @@ public class ApplicationController {
 
     @PostMapping("/request-edit-group")
     public String requestEditGroup(@ModelAttribute Group group, Model model) {
-        String error = isValidGroup(group);
-        if (error != null) {
-            model.addAttribute("error", error);
+
+        Response<Group> groupResponse = groupService.update(group);
+        if (!groupResponse.isOkay()) {
+            model.addAttribute("errors", groupResponse.getErrorMessage());
             return editGroup(group.getId(), model);
         }
-        groupService.update(group);
         return editGroup(group.getId(), model);
     }
 
@@ -184,14 +178,4 @@ public class ApplicationController {
         return error;
     }
 
-    private static String isValidGroup(Group group) {
-        String error = null;
-        if (group.getName().equals("")) {
-            error = "Name cannot be empty";
-        }
-        if (group.getDescription().equals("")) {
-            error = "Description cannot be empty";
-        }
-        return error;
-    }
 }
