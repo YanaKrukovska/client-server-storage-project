@@ -10,11 +10,13 @@ public interface ProductService {
 
     Response<Product> save(Product product);
 
+    List<String> validateProduct(Product product);
+
     void delete(Product product);
 
     void delete(List<Product> productList);
 
-    void update(Product product);
+    Response<Product> update(Product product);
 
     Product findProductById(long id);
 

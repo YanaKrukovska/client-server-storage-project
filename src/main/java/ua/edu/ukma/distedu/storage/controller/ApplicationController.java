@@ -12,6 +12,9 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.util.Collections;
+import java.util.LinkedList;
+
 @Controller
 public class ApplicationController {
 
@@ -96,22 +99,17 @@ public class ApplicationController {
 
     @PostMapping("/request-add-product")
     public String requestAddProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
-        String error = isValidProduct(product);
-        if (groupId == 0) {
-            error = "Select group";
-        }
-        if (error != null) {
-            model.addAttribute("error", error);
+
+        if (groupId == 0){
+            model.addAttribute("errors", new LinkedList<>(Collections.singleton("Select group")));
             model.addAttribute("product", product);
             return addProduct(model);
         }
         product.setGroup(groupService.findGroupById(groupId));
-
-        Response<Product> responseProduct = productService.save(product);
-        if (responseProduct.isOkay()) {
-            model.addAttribute("error", responseProduct.getErrorMessage());
-            model.addAttribute("product", responseProduct.getObject());
-            model.addAttribute("groupId", responseProduct.getObject().getGroup().getId());
+        Response<Product> productResponse = productService.save(product);
+        if (!productResponse.isOkay()) {
+            model.addAttribute("errors", productResponse.getErrorMessage());
+            model.addAttribute("product", product);
             return addProduct(model);
         }
         return "redirect:/products";
@@ -147,13 +145,13 @@ public class ApplicationController {
 
     @PostMapping("/request-edit-product")
     public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
-        String error = isValidProduct(product);
-        if (error != null) {
-            model.addAttribute("error", error);
+
+        product.setGroup(groupService.findGroupById(groupId));
+        Response<Product> productResponse = productService.update(product);
+        if (!productResponse.isOkay()) {
+            model.addAttribute("errors", productResponse.getErrorMessage());
             return editProduct(product.getId(), model);
         }
-        product.setGroup(groupService.findGroupById(groupId));
-        productService.update(product);
         return editProduct(product.getId(), model);
     }
 
@@ -162,20 +160,6 @@ public class ApplicationController {
     public String requestDeleteProduct(@ModelAttribute("productID") long id, Model model) {
         productService.delete(productService.findProductById(id));
         return "redirect:/products";
-    }
-
-    private static String isValidProduct(Product product) {
-        String error = null;
-        if (product.getAmount() < 0) {
-            error = "Amount cannot be < 0";
-        }
-        if (product.getPrice() < 0) {
-            error = "Price cannot be < 0";
-        }
-        if (product.getName().equals("")) {
-            error = "Name cannot be empty";
-        }
-        return error;
     }
 
 }

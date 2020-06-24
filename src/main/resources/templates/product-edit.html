@@ -51,8 +51,11 @@
             <span class="title">Amount</span>
             <input class="fields" type="number" id="amount" name="amount" th:value="*{product.amount}"
                    placeholder="Amount">
-            <span><br></span>
-            <span th:class="error" th:if="${error != null}" class="text-danger" th:text="${error.toString()}"></span>
+            <br>
+
+            <tr th:each="error :${errors}">
+                <span class="text-danger" th:text="${error.toString()}"></span>
+            </tr>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
         </div>
     </form>

@@ -8,8 +8,6 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.repository.ProductRepository;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,13 +23,38 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response<Product> save(Product product) {
-        Product productDB = productRepository.findProductByName(product.getName());
+        List<String> errors = validateProduct(product);
+        if (errors.size() != 0) {
+            return new Response<>(product, errors);
+        }
 
-        if (productDB != null) {
-            return new Response<>(product, new LinkedList<>(Collections.singletonList("Name of the product must be unique")));
+        if (productRepository.findProductByName(product.getName()) != null) {
+            errors.add("Name of the product must be unique");
+            return new Response<>(product, errors);
         }
 
         return new Response<>(productRepository.save(product), new LinkedList<>());
+    }
+
+    @Override
+    public List<String> validateProduct(Product product) {
+
+        List<String> errors = new LinkedList<>();
+
+        if (product.getName().equals("")) {
+            errors.add("Name cannot be empty");
+        }
+        if (product.getAmount() < 0) {
+            errors.add("Amount cannot be < 0");
+        }
+        if (product.getPrice() < 0) {
+            errors.add("Price cannot be < 0");
+        }
+        if (product.getGroup() == null || product.getGroup().getId() == 0) {
+            errors.add("Select group");
+        }
+
+        return errors;
     }
 
     @Override
@@ -65,7 +88,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void update(Product product) {
+    public Response<Product> update(Product product) {
+
+        List<String> errors = validateProduct(product);
+        if (errors.size() != 0) {
+            return new Response<>(product, errors);
+        }
+
+        Product sameNameProduct = productRepository.findProductByName(product.getName());
+        if (sameNameProduct != null && sameNameProduct.getId() != product.getId()) {
+            errors.add("Product with such name already exists");
+            return new Response<>(product, errors);
+        }
+
         Product productDB = productRepository.findProductById(product.getId());
         productDB.setName(product.getName());
         productDB.setGroup(product.getGroup());
@@ -73,7 +108,8 @@ public class ProductServiceImpl implements ProductService {
         productDB.setAmount(product.getAmount());
         productDB.setProducer(product.getProducer());
         productDB.setDescription(product.getDescription());
-        productRepository.save(productDB);
+        return new Response<>(productRepository.save(productDB), errors);
+
     }
 
 
