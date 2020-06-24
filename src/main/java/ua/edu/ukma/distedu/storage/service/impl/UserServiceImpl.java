@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Response<User> addUser(User user) {
 
-        List<String> errors = validateUser(user);
+        List<String> errors = validateUserInputForm(user);
 
         if (errors.size() != 0) {
             return new Response<>(user, errors);
@@ -58,15 +58,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<String> validateUser(User user) {
+    public List<String> validateUserInputForm(User user) {
+
+        List<String> errors;
+        errors = validateUsernameAndPassword(user);
+
+        if (user.getEmail().equals("")) {
+            errors.add("Email can't be empty");
+        }
+
+        return errors;
+    }
+
+    @Override
+    public List<String> validateUsernameAndPassword(User user) {
 
         List<String> errors = new LinkedList<>();
         if (user.getUsername().equals("")) {
             errors.add("Username can't be empty");
-        }
-
-        if (user.getEmail().equals("")) {
-            errors.add("Email can't be empty");
         }
 
         if (user.getPassword().equals("")) {
@@ -74,6 +83,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         return errors;
+    }
+
+    @Override
+    public Response<User> letUserLogIn(User user) {
+
+        List<String> errors = validateUsernameAndPassword(user);
+        if (errors.size() != 0) {
+            return new Response<>(user, errors);
+        }
+
+        if (findUserByUsername(user.getUsername()) == null) {
+            errors.add("User with such username doesn't exist");
+            return new Response<>(user, errors);
+        }
+
+        if (!passwordService.compareRawAndEncodedPassword(user.getPassword(), (findUserByUsername(user.getUsername()).getPassword()))) {
+            errors.add("Wrong password");
+            return new Response<>(user, errors);
+        }
+
+        return new Response<>(user, errors);
     }
 
     @Override

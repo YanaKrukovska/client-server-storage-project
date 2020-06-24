@@ -9,7 +9,11 @@ public interface UserService {
 
     Response<User> addUser(User user);
 
-    List<String> validateUser(User user);
+    List<String> validateUserInputForm(User user);
+
+    List<String> validateUsernameAndPassword(User user);
+
+    Response<User> letUserLogIn(User user);
 
     User findUserById(long id);
 

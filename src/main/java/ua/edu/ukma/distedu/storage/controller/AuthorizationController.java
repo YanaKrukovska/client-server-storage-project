@@ -8,19 +8,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.model.User;
-import ua.edu.ukma.distedu.storage.service.PasswordService;
 import ua.edu.ukma.distedu.storage.service.UserService;
 
 @Controller
 public class AuthorizationController {
 
     private final UserService userService;
-    private final PasswordService passwordService;
 
     @Autowired
-    public AuthorizationController(UserService userService, PasswordService passwordService) {
+    public AuthorizationController(UserService userService) {
         this.userService = userService;
-        this.passwordService = passwordService;
     }
 
     @GetMapping("/registration")
@@ -40,36 +37,27 @@ public class AuthorizationController {
             model.addAttribute("user", responseUser.getObject());
             return registration(model);
         }
-
         return "redirect:/login";
     }
 
 
     @GetMapping("/login")
     public String login(Model model) {
-        model.addAttribute("user", new User());
+        if (model.getAttribute("user") == null) {
+            model.addAttribute("user", new User());
+        }
         return "login";
     }
 
     @PostMapping("/login-processing")
     public String loginUser(@ModelAttribute User user, Model model) {
-        if (user.getUsername().equals("")) {
-            model.addAttribute("usernameError", "usernameError");
-            return "login";
-        }
-        if (userService.findUserByUsername(user.getUsername()) == null) {
-            model.addAttribute("userNotFoundError", "userNotFoundError");
-            return "login";
-        }
-        if (user.getUsername().equals("")) {
-            model.addAttribute("passwordEmptyError", "passwordEmptyError");
-            return "login";
-        }
-        if (!passwordService.compareRawAndEncodedPassword(user.getPassword(), (userService.findUserByUsername(user.getUsername()).getPassword()))) {
-            model.addAttribute("wrongPasswordError", "wrongPasswordError");
-            return "login";
-        }
 
+        Response<User> loginResponse = userService.letUserLogIn(user);
+        if (!loginResponse.isOkay()) {
+            model.addAttribute("errors", loginResponse.getErrorMessage());
+            model.addAttribute("user", loginResponse.getObject());
+            return login(model);
+        }
         return "redirect:/";
     }
 }
