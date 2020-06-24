@@ -12,6 +12,7 @@ import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ApplicationController {
@@ -27,13 +28,13 @@ public class ApplicationController {
 
     @GetMapping("/")
     public String editProduct(Model model) {
-        return "index";
+        return "login";
     }
 
     //todo
     @PostMapping("/error")
     public String error(Model model) {
-        return "index";
+        return "login";
     }
 
 
@@ -68,16 +69,26 @@ public class ApplicationController {
     }
 
     @GetMapping("/products-find")
-    public String productsByGroup(@ModelAttribute("groupId") Long groupId, @ModelAttribute("findProductId") Long findProductId,Model model) {
+    public String productsByGroup(@ModelAttribute("groupId") Long groupId,
+                                  @ModelAttribute("findProductId") Long findProductId,
+                                  @ModelAttribute("findProductName") String findProductName,
+                                  Model model) {
         model.addAttribute("groups", groupService.findAll());
+        //To display previously selected
         model.addAttribute("groupId", groupId);
         model.addAttribute("findProductId",findProductId);
-        List<Product> productList = null;
+        model.addAttribute("findProductName",findProductName);
+        List<Product> productListGroup;
         if (groupId == 0) {
-            productList = productService.findAll();
+            productListGroup = productService.findAll();
         } else {
-            productList =  productService.findAllByGroup(groupService.findGroupById(groupId));
+            productListGroup =  productService.findAllByGroup(groupService.findGroupById(groupId));
         }
+        List<Product> byName = productService.findByName(findProductName);
+        List<Product> productList = productListGroup.stream()
+                .distinct()
+                .filter(byName::contains)
+                .collect(Collectors.toList());
         if (findProductId!=0){
             Product byID = productService.findProductById(findProductId);
             if (productList.contains(byID)) {
@@ -98,7 +109,7 @@ public class ApplicationController {
 
     @GetMapping("/products")
     public String products(Model model) {
-        return productsByGroup(0L, 0L, model);
+        return productsByGroup(0L, 0L,"", model);
     }
 
     @GetMapping("/add-product")

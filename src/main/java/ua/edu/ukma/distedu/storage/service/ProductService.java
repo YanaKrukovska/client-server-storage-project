@@ -19,6 +19,8 @@ public interface ProductService {
 
     List<Product> findAllByGroup(Group group);
 
+    List<Product> findByName(String name);
+
     List<Product> findAll();
 
     double findOverallCost(Product product);

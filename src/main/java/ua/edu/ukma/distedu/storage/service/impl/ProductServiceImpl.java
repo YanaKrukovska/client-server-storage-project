@@ -1,6 +1,8 @@
 package ua.edu.ukma.distedu.storage.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import ua.edu.ukma.distedu.storage.persistence.model.Group;
 import ua.edu.ukma.distedu.storage.persistence.model.Product;
@@ -43,6 +45,18 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAllByGroup(Group group) {
         return productRepository.findAllByGroup(group);
     }
+
+    @Override
+    public List<Product> findByName(String name) {
+        ExampleMatcher matcher = ExampleMatcher.matchingAny()
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+        Example<Product> example = Example.of(
+                new Product(name,null,"",0,0,""),
+                matcher);
+//        List<Product> found = productRepository.findAll(example);
+        return productRepository.findAll(example);
+    }
+
 
     @Override
     public List<Product> findAll() {
