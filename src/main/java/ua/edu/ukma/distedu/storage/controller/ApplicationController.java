@@ -32,12 +32,6 @@ public class ApplicationController {
         return "index";
     }
 
-    //todo
-    @PostMapping("/error")
-    public String error(Model model) {
-        return "index";
-    }
-
 
     @GetMapping("/groups")
     public String groups(Model model) {
@@ -99,7 +93,6 @@ public class ApplicationController {
 
     @PostMapping("/request-add-product")
     public String requestAddProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
-
         if (groupId == 0){
             model.addAttribute("errors", new LinkedList<>(Collections.singleton("Select group")));
             model.addAttribute("product", product);
@@ -124,7 +117,6 @@ public class ApplicationController {
 
     @PostMapping("/request-edit-group")
     public String requestEditGroup(@ModelAttribute Group group, Model model) {
-
         Response<Group> groupResponse = groupService.update(group);
         if (!groupResponse.isOkay()) {
             model.addAttribute("errors", groupResponse.getErrorMessage());
@@ -145,7 +137,6 @@ public class ApplicationController {
 
     @PostMapping("/request-edit-product")
     public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
-
         product.setGroup(groupService.findGroupById(groupId));
         Response<Product> productResponse = productService.update(product);
         if (!productResponse.isOkay()) {
