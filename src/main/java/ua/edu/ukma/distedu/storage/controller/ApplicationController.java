@@ -88,13 +88,16 @@ public class ApplicationController {
             }
         }
         model.addAttribute("products",productList);
+        long value = 0;
+        for (Product p: productList) {
+            value+= p.getAmount()*p.getPrice();
+        }
+        model.addAttribute("value",value);
         return "products";
     }
 
     @GetMapping("/products")
     public String products(Model model) {
-        model.addAttribute("groupId", 0);
-        model.addAttribute("findProductId", 0);
         return productsByGroup(0L, 0L, model);
     }
 

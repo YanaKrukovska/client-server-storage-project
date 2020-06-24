@@ -42,7 +42,9 @@
                 <input class="fields" type="number" min="0" max="2147483647" step="1" id="findProductId" name="findProductId" th:value="*{findProductId}"
                        onchange="this.form.submit()" placeholder="Product ID">
                 <span style="font-size: 20px; margin-left: 20px">Name: </span>
-                <span style="font-size: 20px; margin-left: 20px">Value: </span>
+                <input class="fields" type="text" id="findProductName" name="findProductName"
+                       onchange="this.form.submit()" placeholder="TODO back">
+                <span style="font-size: 20px; margin-left: 20px; color: #fff;background-color: #007bff;" th:value="${value}" th:text="'Value: ' + ${value}"></span>
             </form>
         </div>
         <br>
