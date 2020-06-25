@@ -12,6 +12,7 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,11 +78,8 @@ public class ApplicationController {
         List<Product> productsResult = productService.searchProduct(groupId, searchedProductId, productNameSnippet);
         model.addAttribute("products", productsResult);
 
-        long value = 0;
-        for (Product p : productsResult) {
-            value += p.getAmount() * p.getPrice();
-        }
-        model.addAttribute("value", value);
+        BigDecimal value = productService.findSumFotList(productsResult);
+        model.addAttribute("value", value == null ? 0 : value);
         return "products";
     }
 

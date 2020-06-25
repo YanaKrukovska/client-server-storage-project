@@ -4,6 +4,7 @@ import ua.edu.ukma.distedu.storage.persistence.model.Group;
 import ua.edu.ukma.distedu.storage.persistence.model.Product;
 import ua.edu.ukma.distedu.storage.persistence.model.Response;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
@@ -37,4 +38,7 @@ public interface ProductService {
     List<Product> findProductByIdAndGroup(long id, long groupId);
 
     List<Product> searchProduct(long groupId, long productId, String nameSnippet);
+
+    BigDecimal findSumFotList(List<Product> products);
+
 }

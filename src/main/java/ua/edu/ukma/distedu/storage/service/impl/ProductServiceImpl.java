@@ -9,9 +9,11 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.repository.ProductRepository;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -136,6 +138,12 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return result;
+    }
+
+    @Override
+    public BigDecimal findSumFotList(List<Product> products) {
+        return productRepository.sumForList(products.stream().map(Product::getId)
+                .collect(Collectors.toList()));
     }
 
 
