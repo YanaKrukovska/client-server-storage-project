@@ -1,6 +1,7 @@
 package ua.edu.ukma.distedu.storage.persistence.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity(name = "products")
 public class Product {
@@ -113,5 +114,24 @@ public class Product {
                 ", amount=" + amount +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id &&
+                Double.compare(product.price, price) == 0 &&
+                amount == product.amount &&
+                Objects.equals(name, product.name) &&
+                Objects.equals(group, product.group) &&
+                Objects.equals(producer, product.producer) &&
+                Objects.equals(description, product.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, group, producer, price, amount, description);
     }
 }

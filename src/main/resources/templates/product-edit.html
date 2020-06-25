@@ -50,6 +50,8 @@
                    placeholder="Price">
 
             <span class="title" th:text="'Amount: ' + ${product.amount}"></span>
+            <input style="display: none;" class="fields" type="number" min="0" max="2147483647" id="amount" name="amount" th:value="*{product.amount}"
+                   placeholder="Amount">
             <span class="title" >Change amount by:</span>
             <input class="fields" type="number" id="productAmountChange" name="productAmountChange" th:value="*{productAmountChange}"
                    placeholder="Change">

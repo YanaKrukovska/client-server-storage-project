@@ -12,6 +12,7 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -170,9 +171,15 @@ public class ApplicationController {
                                      @ModelAttribute("groupId") Long groupId,
                                      @ModelAttribute("productAmountChange") Long productAmountChange,
                                      Model model) {
-        product.setGroup(groupService.findGroupById(groupId));
         synchronized (productService){
             Product upToDate = productService.findProductById(product.getId());
+//            if (!upToDate.equals(product)){
+//                List<String> err = new ArrayList<>();
+//                err.add("Product wasn't up-to-date. Try now.");
+//                model.addAttribute("errors", err);
+//                return editProduct(product.getId(), model);
+//            }
+            product.setGroup(groupService.findGroupById(groupId));
             upToDate.changeAmount(productAmountChange);
             product.setAmount(upToDate.getAmount());
 
