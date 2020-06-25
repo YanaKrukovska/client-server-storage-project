@@ -71,6 +71,7 @@ public class ApplicationController {
                                   @ModelAttribute("findProductName") String findProductName,
                                   Model model) {
         model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("productAmountChange", 0);
         //To display previously selected
         model.addAttribute("groupId", groupId);
         model.addAttribute("findProductId",findProductId);
@@ -159,17 +160,27 @@ public class ApplicationController {
         model.addAttribute("product", product);
         model.addAttribute("groups", groupService.findAll());
         model.addAttribute("groupId", product.getGroup().getId());
+        model.addAttribute("productAmountChange", new Long(0));
         return "product-edit";
     }
 
 
     @PostMapping("/request-edit-product")
-    public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
+    public String requestEditProduct(@ModelAttribute Product product,
+                                     @ModelAttribute("groupId") Long groupId,
+                                     @ModelAttribute("productAmountChange") Long productAmountChange,
+                                     Model model) {
         product.setGroup(groupService.findGroupById(groupId));
-        Response<Product> productResponse = productService.update(product);
-        if (!productResponse.isOkay()) {
-            model.addAttribute("errors", productResponse.getErrorMessage());
-            return editProduct(product.getId(), model);
+        synchronized (productService){
+            Product upToDate = productService.findProductById(product.getId());
+            upToDate.changeAmount(productAmountChange);
+            product.setAmount(upToDate.getAmount());
+
+            Response<Product> productResponse = productService.update(product);
+            if (!productResponse.isOkay()) {
+                model.addAttribute("errors", productResponse.getErrorMessage());
+                return editProduct(product.getId(), model);
+            }
         }
         return "redirect:/products";
     }

@@ -23,7 +23,7 @@ public class Product {
     private double price;
 
     @Column(nullable = false)
-    private double amount;
+    private long amount;
 
     @Column(nullable = false)
     private String description;
@@ -32,13 +32,18 @@ public class Product {
         this("",null,"",0,0,"");
     }
 
-    public Product(String name, Group group, String producer, double price, double amount, String description) {
+    public Product(String name, Group group, String producer, double price, long amount, String description) {
         this.name = name;
         this.group = group;
         this.producer = producer;
         this.price = price;
         this.amount = amount;
         this.description = description;
+    }
+
+    public void changeAmount(long change){
+        this.amount+=change;
+        if (this.amount<0) this.amount = 0;
     }
 
     public long getId() {
@@ -81,11 +86,11 @@ public class Product {
         this.price = price;
     }
 
-    public double getAmount() {
+    public long getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(long amount) {
         this.amount = amount;
     }
 
