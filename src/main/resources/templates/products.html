@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
     <title>Products</title>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
-
+    <link href="../static/css/products.css" th:href="@{/css/products.css}" rel="stylesheet"/>
 </head>
 <body>
 
@@ -18,17 +18,17 @@
 <main style="padding-top: 60px; padding-bottom: 60px;">
 
     <div class="container">
-        <div class="d-flex justify-content-center">
-            <p class="text-center font-weight-bold d-inline" style="font-size: 30px; margin-right: 20px">PRODUCTS</p>
+        <div class="d-flex justify-content-center align-items-center">
+            <p class="text-center font-weight-bold d-inline" style="font-size: 30px; margin: 0px; margin-right: 20px">PRODUCTS</p>
 
             <form class="d-inline" th:action="@{/add-product}" method="get" target="_blank">
-                <button type="submit" class="btn btn-lg btn-success btn-secondary" >Add</button>
+                <button type="submit" class="btn btn-group-sm btn-success btn-secondary font-weight-bold">&#65291;</button>
             </form>
-            <br>
         </div>
+        <br>
         <div class="d-flex justify-content-center">
             <form id="findForm" class="d-inline" th:action="@{/products-find}" method="get">
-                <span style="font-size: 20px; margin-left: 20px; color: #fff;background-color: #007bff;padding: 5px;" th:value="${value}" th:text="'Value: ' + ${value}"></span>
+                <span class="value-title" th:value="${value}" th:text="'Value: ' + ${value}"></span>
                 <span style="font-size: 20px; margin-left: 20px">Group: </span>
                 <select id="groupId" name="groupId" th:value="*{groupId}" onchange="this.form.submit()"
                         style="font-size: 20px">
@@ -73,14 +73,16 @@
                 <td class="align-middle"><span class="align-middle" th:text="${product.amount}"></span></td>
                 <form th:action="@{/request-delete-product}" method="post">
                     <td><input type="hidden" th:value="${product.id}" name="productID">
-                        <button type="submit" class="btn btn-danger btn-block" style="padding: 0px" onclick="return confirm('Are you sure you want to delete this product?')">
-                            Delete
+                        <button type="submit" class="font-weight-bold btn btn-danger btn-block" style="padding: 0px;" onclick="return confirm('Are you sure you want to delete this product?')">
+                            &#215;
                         </button>
                     </td>
                 </form>
                 <form th:action="@{/edit-product}" method="get" target="_blank">
                     <td><input type="hidden" th:value="${product.id}" name="productID">
-                        <button type="submit" class="btn btn-primary btn-block" style="padding: 0px">Inspect</button>
+                        <button type="submit" class="btn btn-primary btn-block" style="padding: 0px;">
+                            &#x2699;
+                        </button>
                     </td>
                 </form>
 
