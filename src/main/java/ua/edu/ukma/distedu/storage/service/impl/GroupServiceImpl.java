@@ -1,5 +1,6 @@
 package ua.edu.ukma.distedu.storage.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.edu.ukma.distedu.storage.persistence.model.Group;
@@ -9,6 +10,7 @@ import ua.edu.ukma.distedu.storage.persistence.repository.GroupRepository;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,13 +28,15 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Response<Group> save(Group group) {
+        if (group == null) {
+            return new Response<>(null, new LinkedList<>(Collections.singleton("Group can't be null")));
+        }
         List<String> errors = validateGroup(group);
-        if (errors.size() != 0) {
+        if (!errors.isEmpty()) {
             return new Response<>(group, errors);
         }
-
         if (groupRepository.findGroupByName(group.getName()) != null) {
-            errors.add("Name of the group must be unique");
+            errors.add("Group with name " + group.getName() + " already exists");
             return new Response<>(group, errors);
         }
 
@@ -42,11 +46,10 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<String> validateGroup(Group group) {
         List<String> errors = new LinkedList<>();
-        if (group.getName().equals("")) {
+        if (StringUtils.isAllBlank(group.getName())) {
             errors.add("Group name can't be empty");
         }
-
-        if (group.getDescription().equals("")) {
+        if (StringUtils.isAllBlank(group.getDescription())) {
             errors.add("Description can't be empty");
         }
 
@@ -68,13 +71,13 @@ public class GroupServiceImpl implements GroupService {
     public Response<Group> update(Group group) {
 
         List<String> errors = validateGroup(group);
-        if (errors.size() != 0) {
+        if (!errors.isEmpty()) {
             return new Response<>(group, errors);
         }
 
-        if (groupRepository.findGroupByName(group.getName()) != null &&
-                groupRepository.findGroupByName(group.getName()).getId() != group.getId()) {
-            errors.add("Group with such name already exists");
+        Group groupWithGivenName = groupRepository.findGroupByName(group.getName());
+        if (groupWithGivenName != null && groupWithGivenName.getId() != group.getId()) {
+            errors.add("Group with name " + group.getName() + " already exists");
             return new Response<>(group, errors);
         }
 

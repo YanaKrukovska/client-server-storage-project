@@ -1,5 +1,6 @@
 package ua.edu.ukma.distedu.storage.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,22 +32,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Response<User> addUser(User user) {
 
+        if (user == null) {
+            return new Response<>(null, new LinkedList<>(Collections.singleton("User can't be null")));
+        }
+
         List<String> errors = validateUserInputForm(user);
-
-        if (errors.size() != 0) {
+        if (!errors.isEmpty()) {
             return new Response<>(user, errors);
         }
-
         if (userRepository.findUserByUsername(user.getUsername()) != null) {
-            errors.add("User with such username already exists");
+            errors.add("User with username " + user.getUsername() + " already exists");
             return new Response<>(user, errors);
         }
-
         if (userRepository.findUserByEmail(user.getEmail()) != null) {
-            errors.add("User with such email already exists");
+            errors.add("User with email + " + user.getEmail() + " already exists");
             return new Response<>(user, errors);
         }
-
         if (!passwordService.comparePasswordAndConfirmationPassword(user.getPassword(), user.getPasswordConfirm())) {
             errors.add("Passwords are different");
             return new Response<>(user, errors);
@@ -60,10 +61,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<String> validateUserInputForm(User user) {
 
-        List<String> errors;
-        errors = validateUsernameAndPassword(user);
-
-        if (user.getEmail().equals("")) {
+        List<String> errors = validateUsernameAndPassword(user);
+        if (StringUtils.isAllBlank(user.getEmail())) {
             errors.add("Email can't be empty");
         }
 
@@ -74,31 +73,32 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<String> validateUsernameAndPassword(User user) {
 
         List<String> errors = new LinkedList<>();
-        if (user.getUsername().equals("")) {
+        if (StringUtils.isAllBlank(user.getUsername())) {
             errors.add("Username can't be empty");
         }
-
-        if (user.getPassword().equals("")) {
+        if (StringUtils.isAllBlank(user.getPassword())) {
             errors.add("Password can't be empty");
         }
-
         return errors;
     }
 
     @Override
     public Response<User> letUserLogIn(User user) {
 
+        if (user == null) {
+            return new Response<>(null, new LinkedList<>(Collections.singleton("User can't be null")));
+        }
         List<String> errors = validateUsernameAndPassword(user);
-        if (errors.size() != 0) {
+        if (!errors.isEmpty()) {
             return new Response<>(user, errors);
         }
 
-        if (findUserByUsername(user.getUsername()) == null) {
-            errors.add("User with such username doesn't exist");
+        User userWithGivenUsername = findUserByUsername(user.getUsername());
+        if (userWithGivenUsername == null) {
+            errors.add("User with username + " + user.getUsername() + " doesn't exist");
             return new Response<>(user, errors);
         }
-
-        if (!passwordService.compareRawAndEncodedPassword(user.getPassword(), (findUserByUsername(user.getUsername()).getPassword()))) {
+        if (!passwordService.compareRawAndEncodedPassword(user.getPassword(), userWithGivenUsername.getPassword())) {
             errors.add("Wrong password");
             return new Response<>(user, errors);
         }
