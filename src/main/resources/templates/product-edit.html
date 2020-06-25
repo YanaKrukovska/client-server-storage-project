@@ -10,13 +10,13 @@
 </head>
 
 <!-- start main -->
-<body class="text-center">
+<body class="text-center" style="margin-top: 15%">
 <main>
     <!-- Navigation -->
     <!--/*@thymesVar id="notifications" type=""*/-->
     <div class="nav" th:replace="fragments/navbar.html :: navigation(notifications=${notifications})"></div>
 
-    <h1 class="h3 mb-3 font-weight-normal">Product</h1>
+    <h1 class="h3 mb-3 font-weight-normal" >Product</h1>
 
     <form class="row d-flex justify-content-center" th:action="@{/request-edit-product}" enctype="multipart/form-data"
           method="post">

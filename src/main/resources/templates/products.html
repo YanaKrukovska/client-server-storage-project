@@ -28,7 +28,7 @@
         <br>
         <div class="d-flex justify-content-center">
             <form id="findForm" class="d-inline" th:action="@{/products-find}" method="get">
-                <span class="value-title" th:value="${value}" th:text="'Value: ' + ${value}"></span>
+                <span class="value-title" th:value="${value}" th:text="'Value: ₴' + ${value}"></span>
                 <span style="font-size: 20px; margin-left: 20px">Group: </span>
                 <select id="groupId" name="groupId" th:value="*{groupId}" onchange="this.form.submit()"
                         style="font-size: 20px">
@@ -69,7 +69,7 @@
                 <td class="align-middle"><span class="align-middle" th:text="${product.name}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${product.getGroup().name}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${product.producer}"></span></td>
-                <td class="align-middle"><span class="align-middle" th:text="${product.price}"></span></td>
+                <td class="align-middle"><span class="align-middle" th:text="'₴'+${product.price}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${product.amount}"></span></td>
                 <form th:action="@{/request-delete-product}" method="post">
                     <td><input type="hidden" th:value="${product.id}" name="productID">
