@@ -14,6 +14,9 @@ import ua.edu.ukma.distedu.storage.service.ProductService;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Controller
 public class ApplicationController {
@@ -29,9 +32,8 @@ public class ApplicationController {
 
     @GetMapping("/")
     public String editProduct(Model model) {
-        return "index";
+        return "login";
     }
-
 
     @GetMapping("/groups")
     public String groups(Model model) {
@@ -63,22 +65,48 @@ public class ApplicationController {
         return "redirect:/groups";
     }
 
-    @GetMapping("/products-by-group")
-    public String productsByGroup(@ModelAttribute("groupId") Long groupId, Model model) {
+    @GetMapping("/products-find")
+    public String productsByGroup(@ModelAttribute("groupId") Long groupId,
+                                  @ModelAttribute("findProductId") Long findProductId,
+                                  @ModelAttribute("findProductName") String findProductName,
+                                  Model model) {
         model.addAttribute("groups", groupService.findAll());
+        //To display previously selected
         model.addAttribute("groupId", groupId);
+        model.addAttribute("findProductId",findProductId);
+        model.addAttribute("findProductName",findProductName);
+        List<Product> productListGroup;
         if (groupId == 0) {
-            model.addAttribute("products", productService.findAll());
+            productListGroup = productService.findAll();
         } else {
-            model.addAttribute("products", productService.findAllByGroup(groupService.findGroupById(groupId)));
+            productListGroup =  productService.findAllByGroup(groupService.findGroupById(groupId));
         }
+        List<Product> byName = productService.findByName(findProductName);
+        List<Product> productList = productListGroup.stream()
+                .distinct()
+                .filter(byName::contains)
+                .collect(Collectors.toList());
+        if (findProductId!=0){
+            Product byID = productService.findProductById(findProductId);
+            if (productList.contains(byID)) {
+                productList.clear();
+                productList.add(byID);
+            } else {
+                productList.clear();
+            }
+        }
+        model.addAttribute("products",productList);
+        long value = 0;
+        for (Product p: productList) {
+            value+= p.getAmount()*p.getPrice();
+        }
+        model.addAttribute("value",value);
         return "products";
     }
 
     @GetMapping("/products")
     public String products(Model model) {
-        model.addAttribute("groupId", 0);
-        return productsByGroup(0L, model);
+        return productsByGroup(0L, 0L,"", model);
     }
 
     @GetMapping("/add-product")

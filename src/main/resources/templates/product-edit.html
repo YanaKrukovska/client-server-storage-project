@@ -6,6 +6,7 @@
     <title>Edit product</title>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.5.0/css/bootstrap.min.css} "/>
     <link href="../static/css/product-actions.css" th:href="@{/css/product-actions.css}" rel="stylesheet"/>
+
 </head>
 
 <!-- start main -->
@@ -45,11 +46,11 @@
             </select>
 
             <span class="title">Price</span>
-            <input class="fields" type="number" id="price" name="price" th:value="*{product.price}"
+            <input class="fields" type="number"min="0" max="2147483647" step="0.01" id="price" name="price" th:value="*{product.price}"
                    placeholder="Price">
 
             <span class="title">Amount</span>
-            <input class="fields" type="number" id="amount" name="amount" th:value="*{product.amount}"
+            <input class="fields" type="number" min="0" max="2147483647" step="0.01" id="amount" name="amount" th:value="*{product.amount}"
                    placeholder="Amount">
             <br>
 
@@ -70,6 +71,7 @@
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/checkInput.js}"></script>
 
 </body>
 </html>
