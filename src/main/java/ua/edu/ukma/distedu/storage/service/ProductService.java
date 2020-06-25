@@ -20,12 +20,21 @@ public interface ProductService {
 
     Product findProductById(long id);
 
+    List<Product> findProductByIdAsList(long id);
+
     List<Product> findAllByGroup(Group group);
 
-    List<Product> findByName(String name);
+    List<Product> findAllByGroupId(long groupId);
 
     List<Product> findAll();
 
     double findOverallCost(Product product);
 
+    List<Product> findAllByNameSnippet(String snippet);
+
+    List<Product> findAllByNameSnippetAndGroup(String snippet, long groupId);
+
+    List<Product> findProductByIdAndGroup(long id, long groupId);
+
+    List<Product> searchProduct(long groupId, long productId, String nameSnippet);
 }

@@ -15,7 +15,6 @@ import ua.edu.ukma.distedu.storage.service.ProductService;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -67,46 +66,28 @@ public class ApplicationController {
 
     @GetMapping("/products-find")
     public String productsByGroup(@ModelAttribute("groupId") Long groupId,
-                                  @ModelAttribute("findProductId") Long findProductId,
-                                  @ModelAttribute("findProductName") String findProductName,
+                                  @ModelAttribute("findProductId") Long searchedProductId,
+                                  @ModelAttribute("findProductName") String productNameSnippet,
                                   Model model) {
         model.addAttribute("groups", groupService.findAll());
-        //To display previously selected
         model.addAttribute("groupId", groupId);
-        model.addAttribute("findProductId",findProductId);
-        model.addAttribute("findProductName",findProductName);
-        List<Product> productListGroup;
-        if (groupId == 0) {
-            productListGroup = productService.findAll();
-        } else {
-            productListGroup =  productService.findAllByGroup(groupService.findGroupById(groupId));
-        }
-        List<Product> byName = productService.findByName(findProductName);
-        List<Product> productList = productListGroup.stream()
-                .distinct()
-                .filter(byName::contains)
-                .collect(Collectors.toList());
-        if (findProductId!=0){
-            Product byID = productService.findProductById(findProductId);
-            if (productList.contains(byID)) {
-                productList.clear();
-                productList.add(byID);
-            } else {
-                productList.clear();
-            }
-        }
-        model.addAttribute("products",productList);
+        model.addAttribute("findProductId", searchedProductId);
+        model.addAttribute("findProductName", productNameSnippet);
+
+        List<Product> productsResult = productService.searchProduct(groupId, searchedProductId, productNameSnippet);
+        model.addAttribute("products", productsResult);
+
         long value = 0;
-        for (Product p: productList) {
-            value+= p.getAmount()*p.getPrice();
+        for (Product p : productsResult) {
+            value += p.getAmount() * p.getPrice();
         }
-        model.addAttribute("value",value);
+        model.addAttribute("value", value);
         return "products";
     }
 
     @GetMapping("/products")
     public String products(Model model) {
-        return productsByGroup(0L, 0L,"", model);
+        return productsByGroup(0L, 0L, "", model);
     }
 
     @GetMapping("/add-product")
@@ -121,7 +102,7 @@ public class ApplicationController {
 
     @PostMapping("/request-add-product")
     public String requestAddProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
-        if (groupId == 0){
+        if (groupId == 0) {
             model.addAttribute("errors", new LinkedList<>(Collections.singleton("Select group")));
             model.addAttribute("product", product);
             return addProduct(model);

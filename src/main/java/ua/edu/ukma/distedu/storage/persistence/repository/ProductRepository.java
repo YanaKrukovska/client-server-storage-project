@@ -14,4 +14,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByGroup(Group group);
 
+    List<Product> findAllByGroup_Id(long groupId);
+
+    List<Product> findProductsByNameContainsIgnoreCase(String snippet);
+
+    List<Product> findProductByNameContainsIgnoreCaseAndGroup_Id(String snippet, long groupId);
+
+    List<Product> findProductByIdAndGroup_Id(long id, long groupId);
+
+    List<Product> findAllById(long id);
+
 }
