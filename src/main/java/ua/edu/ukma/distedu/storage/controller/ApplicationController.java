@@ -12,6 +12,7 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,6 +72,7 @@ public class ApplicationController {
                                   @ModelAttribute("findProductName") String findProductName,
                                   Model model) {
         model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("productAmountChange", 0);
         //To display previously selected
         model.addAttribute("groupId", groupId);
         model.addAttribute("findProductId",findProductId);
@@ -159,17 +161,33 @@ public class ApplicationController {
         model.addAttribute("product", product);
         model.addAttribute("groups", groupService.findAll());
         model.addAttribute("groupId", product.getGroup().getId());
+        model.addAttribute("productAmountChange", new Long(0));
         return "product-edit";
     }
 
 
     @PostMapping("/request-edit-product")
-    public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
-        product.setGroup(groupService.findGroupById(groupId));
-        Response<Product> productResponse = productService.update(product);
-        if (!productResponse.isOkay()) {
-            model.addAttribute("errors", productResponse.getErrorMessage());
-            return editProduct(product.getId(), model);
+    public String requestEditProduct(@ModelAttribute Product product,
+                                     @ModelAttribute("groupId") Long groupId,
+                                     @ModelAttribute("productAmountChange") Long productAmountChange,
+                                     Model model) {
+        synchronized (productService){
+            Product upToDate = productService.findProductById(product.getId());
+//            if (!upToDate.equals(product)){
+//                List<String> err = new ArrayList<>();
+//                err.add("Product wasn't up-to-date. Try now.");
+//                model.addAttribute("errors", err);
+//                return editProduct(product.getId(), model);
+//            }
+            product.setGroup(groupService.findGroupById(groupId));
+            upToDate.changeAmount(productAmountChange);
+            product.setAmount(upToDate.getAmount());
+
+            Response<Product> productResponse = productService.update(product);
+            if (!productResponse.isOkay()) {
+                model.addAttribute("errors", productResponse.getErrorMessage());
+                return editProduct(product.getId(), model);
+            }
         }
         return "redirect:/products";
     }
