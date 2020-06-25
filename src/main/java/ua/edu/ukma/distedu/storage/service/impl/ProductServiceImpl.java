@@ -1,5 +1,6 @@
 package ua.edu.ukma.distedu.storage.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -10,6 +11,7 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.repository.ProductRepository;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,13 +27,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response<Product> save(Product product) {
+        if (product == null) {
+            return new Response<>(null, new LinkedList<>(Collections.singleton("Product can't be null")));
+        }
         List<String> errors = validateProduct(product);
-        if (errors.size() != 0) {
+        if (!errors.isEmpty()) {
             return new Response<>(product, errors);
         }
-
         if (productRepository.findProductByName(product.getName()) != null) {
-            errors.add("Name of the product must be unique");
+            errors.add("Product with name " + product.getName() + " already exists");
             return new Response<>(product, errors);
         }
 
@@ -43,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
 
         List<String> errors = new LinkedList<>();
 
-        if (product.getName().equals("")) {
+        if (StringUtils.isAllBlank(product.getName())) {
             errors.add("Name cannot be empty");
         }
         if (product.getAmount() < 0) {
@@ -84,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
         ExampleMatcher matcher = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
         Example<Product> example = Example.of(
-                new Product(name,null,"",0,0,""),
+                new Product(name, null, "", 0, 0, ""),
                 matcher);
 //        List<Product> found = productRepository.findAll(example);
         return productRepository.findAll(example);
@@ -105,13 +109,13 @@ public class ProductServiceImpl implements ProductService {
     public Response<Product> update(Product product) {
 
         List<String> errors = validateProduct(product);
-        if (errors.size() != 0) {
+        if (!errors.isEmpty()) {
             return new Response<>(product, errors);
         }
 
         Product sameNameProduct = productRepository.findProductByName(product.getName());
         if (sameNameProduct != null && sameNameProduct.getId() != product.getId()) {
-            errors.add("Product with such name already exists");
+            errors.add("Product with name " + product.getName() +" already exists");
             return new Response<>(product, errors);
         }
 
