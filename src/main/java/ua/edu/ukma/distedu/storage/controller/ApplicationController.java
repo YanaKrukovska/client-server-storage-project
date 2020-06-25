@@ -150,7 +150,7 @@ public class ApplicationController {
             model.addAttribute("errors", groupResponse.getErrorMessage());
             return editGroup(group.getId(), model);
         }
-        return editGroup(group.getId(), model);
+        return "redirect:/groups";
     }
 
     @GetMapping("/edit-product")
@@ -171,7 +171,7 @@ public class ApplicationController {
             model.addAttribute("errors", productResponse.getErrorMessage());
             return editProduct(product.getId(), model);
         }
-        return editProduct(product.getId(), model);
+        return "redirect:/products";
     }
 
 

@@ -19,7 +19,7 @@
 
     <div class="container">
         <p class="text-center font-weight-bold" style="font-size: 30px">GROUPS</p>
-        <form th:action="@{/add-group}" method="get" target="_blank">
+        <form th:action="@{/add-group}" method="get">
             <button type="submit" class="btn btn-lg btn-success btn-block font-weight-bold" style="width: 15%; margin: auto;">&#65291;</button>
         </form>
         <br>
@@ -48,7 +48,7 @@
                         </button>
                     </td>
                 </form>
-                <form th:action="@{/edit-group}" method="get" target="_blank">
+                <form th:action="@{/edit-group}" method="get">
                     <td><input type="hidden" th:value="${group.id}" name="groupID">
                         <button type="submit" class="btn btn-primary btn-block" style="padding: 0px">
                             &#x2699;

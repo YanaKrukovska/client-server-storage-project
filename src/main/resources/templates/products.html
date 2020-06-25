@@ -21,7 +21,7 @@
         <div class="d-flex justify-content-center align-items-center">
             <p class="text-center font-weight-bold d-inline" style="font-size: 30px; margin: 0px; margin-right: 20px">PRODUCTS</p>
 
-            <form class="d-inline" th:action="@{/add-product}" method="get" target="_blank">
+            <form class="d-inline" th:action="@{/add-product}" method="get">
                 <button type="submit" class="btn btn-group-sm btn-success btn-secondary font-weight-bold">&#65291;</button>
             </form>
         </div>
@@ -78,7 +78,7 @@
                         </button>
                     </td>
                 </form>
-                <form th:action="@{/edit-product}" method="get" target="_blank">
+                <form th:action="@{/edit-product}" method="get" >
                     <td><input type="hidden" th:value="${product.id}" name="productID">
                         <button type="submit" class="btn btn-primary btn-block" style="padding: 0px;">
                             &#x2699;

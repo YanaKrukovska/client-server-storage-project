@@ -30,7 +30,7 @@
                    placeholder="Name">
 
             <span class="title">Description</span>
-            <textarea class="fields" type="text" id="description" name="description" th:value="*{group.description}"
+            <textarea cols="30" style="height: 150px" class="fields" type="text" id="description" name="description" th:value="*{group.description}"
                       th:text="*{group.description}"
                       placeholder="Description"></textarea>
 
@@ -40,7 +40,7 @@
                 <span class="text-danger" th:text="${error.toString()}"></span>
             </tr>
 
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Edit</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
         </div>
     </form>
 </main>
