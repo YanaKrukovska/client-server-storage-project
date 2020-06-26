@@ -77,7 +77,7 @@
                 <td class="align-middle"><span class="align-middle" th:text="${product.producer}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="'₴'+${product.price}"></span></td>
                 <td class="align-middle"><span class="align-middle" th:text="${product.amount}"></span></td>
-                <form th:action="@{/accept-product}" method="get">
+                <form th:action="@{/arrival-product}" method="get">
                     <td><input type="hidden" th:value="${product.id}" name="productID">
                         <button type="submit" class="font-weight-bold btn btn-danger btn-block"
                                 style="padding: 0; background-color: forestgreen; border:none">

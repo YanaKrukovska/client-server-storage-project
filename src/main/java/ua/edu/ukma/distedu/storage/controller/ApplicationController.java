@@ -31,7 +31,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/")
-    public String editProduct(Model model) {
+    public String editProduct() {
         return "login";
     }
 
@@ -71,8 +71,6 @@ public class ApplicationController {
                                   @ModelAttribute("findProductName") String productNameSnippet,
                                   Model model) {
         model.addAttribute("groups", groupService.findAll());
-        model.addAttribute("productAmountChange", 0);
-        //To display previously selected
         model.addAttribute("groupId", groupId);
         model.addAttribute("findProductId", searchedProductId);
         model.addAttribute("findProductName", productNameSnippet);
@@ -140,18 +138,12 @@ public class ApplicationController {
         model.addAttribute("product", product);
         model.addAttribute("groups", groupService.findAll());
         model.addAttribute("groupId", product.getGroup().getId());
-        model.addAttribute("productAmountChange", new Long(0));
         return "product-edit";
     }
 
 
     @PostMapping("/request-edit-product")
-    public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId,@ModelAttribute("productAmountChange") Long productAmountChange, Model model) {
-        Product upToDate = productService.findProductById(product.getId());
-        product.setGroup(groupService.findGroupById(groupId));
-        upToDate.changeAmount(productAmountChange);
-        product.setAmount(upToDate.getAmount());
-
+    public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
         product.setGroup(groupService.findGroupById(groupId));
         Response<Product> productResponse = productService.update(product);
         if (!productResponse.isOkay()) {
@@ -168,15 +160,15 @@ public class ApplicationController {
         return "redirect:/products";
     }
 
-    @GetMapping("/accept-product")
+    @GetMapping("/arrival-product")
     public String openAcceptMoreProductPage(@ModelAttribute("productID") long productId, Model model){
         Product product = productService.findProductById(productId);
         model.addAttribute("product", product);
         model.addAttribute("arrivedAmount", 0L);
-        return "accept-product";
+        return "arrival-product";
     }
 
-    @PostMapping("/accept-product")
+    @PostMapping("/arrival-product")
     public String acceptMoreProduct(@ModelAttribute("productID") long id, @ModelAttribute("arrivedAmount") long amount, Model model) {
         Response<Product> productResponse = productService.addProductAmount(id, amount);
         if (!productResponse.isOkay()) {
