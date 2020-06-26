@@ -18,4 +18,10 @@ $(document).ready(function(){
         }
     });
 
+    $("#productAmountChange").on('input',function(e){
+        if ($("#productAmountChange").val()==[]){
+            $("#productAmountChange").val(0);
+        }
+    });
+
 });

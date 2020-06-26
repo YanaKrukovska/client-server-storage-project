@@ -13,6 +13,7 @@ import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,6 +72,8 @@ public class ApplicationController {
                                   @ModelAttribute("findProductName") String productNameSnippet,
                                   Model model) {
         model.addAttribute("groups", groupService.findAll());
+        model.addAttribute("productAmountChange", 0);
+        //To display previously selected
         model.addAttribute("groupId", groupId);
         model.addAttribute("findProductId", searchedProductId);
         model.addAttribute("findProductName", productNameSnippet);
@@ -138,12 +141,18 @@ public class ApplicationController {
         model.addAttribute("product", product);
         model.addAttribute("groups", groupService.findAll());
         model.addAttribute("groupId", product.getGroup().getId());
+        model.addAttribute("productAmountChange", new Long(0));
         return "product-edit";
     }
 
 
     @PostMapping("/request-edit-product")
-    public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
+    public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId,@ModelAttribute("productAmountChange") Long productAmountChange, Model model) {
+        Product upToDate = productService.findProductById(product.getId());
+        product.setGroup(groupService.findGroupById(groupId));
+        upToDate.changeAmount(productAmountChange);
+        product.setAmount(upToDate.getAmount());
+
         product.setGroup(groupService.findGroupById(groupId));
         Response<Product> productResponse = productService.update(product);
         if (!productResponse.isOkay()) {
