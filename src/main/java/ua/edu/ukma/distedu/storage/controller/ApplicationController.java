@@ -12,11 +12,10 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -32,7 +31,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/")
-    public String editProduct(Model model) {
+    public String editProduct() {
         return "login";
     }
 
@@ -68,47 +67,25 @@ public class ApplicationController {
 
     @GetMapping("/products-find")
     public String productsByGroup(@ModelAttribute("groupId") Long groupId,
-                                  @ModelAttribute("findProductId") Long findProductId,
-                                  @ModelAttribute("findProductName") String findProductName,
+                                  @ModelAttribute("findProductId") Long searchedProductId,
+                                  @ModelAttribute("findProductName") String productNameSnippet,
                                   Model model) {
         model.addAttribute("groups", groupService.findAll());
-        model.addAttribute("productAmountChange", 0);
-        //To display previously selected
         model.addAttribute("groupId", groupId);
-        model.addAttribute("findProductId",findProductId);
-        model.addAttribute("findProductName",findProductName);
-        List<Product> productListGroup;
-        if (groupId == 0) {
-            productListGroup = productService.findAll();
-        } else {
-            productListGroup =  productService.findAllByGroup(groupService.findGroupById(groupId));
-        }
-        List<Product> byName = productService.findByName(findProductName);
-        List<Product> productList = productListGroup.stream()
-                .distinct()
-                .filter(byName::contains)
-                .collect(Collectors.toList());
-        if (findProductId!=0){
-            Product byID = productService.findProductById(findProductId);
-            if (productList.contains(byID)) {
-                productList.clear();
-                productList.add(byID);
-            } else {
-                productList.clear();
-            }
-        }
-        model.addAttribute("products",productList);
-        long value = 0;
-        for (Product p: productList) {
-            value+= p.getAmount()*p.getPrice();
-        }
-        model.addAttribute("value",value);
+        model.addAttribute("findProductId", searchedProductId);
+        model.addAttribute("findProductName", productNameSnippet);
+
+        List<Product> productsResult = productService.searchProduct(groupId, searchedProductId, productNameSnippet);
+        model.addAttribute("products", productsResult);
+
+        BigDecimal value = productService.findSumFotList(productsResult);
+        model.addAttribute("value", value == null ? 0 : value);
         return "products";
     }
 
     @GetMapping("/products")
     public String products(Model model) {
-        return productsByGroup(0L, 0L,"", model);
+        return productsByGroup(0L, 0L, "", model);
     }
 
     @GetMapping("/add-product")
@@ -123,7 +100,7 @@ public class ApplicationController {
 
     @PostMapping("/request-add-product")
     public String requestAddProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
-        if (groupId == 0){
+        if (groupId == 0) {
             model.addAttribute("errors", new LinkedList<>(Collections.singleton("Select group")));
             model.addAttribute("product", product);
             return addProduct(model);
@@ -161,33 +138,17 @@ public class ApplicationController {
         model.addAttribute("product", product);
         model.addAttribute("groups", groupService.findAll());
         model.addAttribute("groupId", product.getGroup().getId());
-        model.addAttribute("productAmountChange", new Long(0));
         return "product-edit";
     }
 
 
     @PostMapping("/request-edit-product")
-    public String requestEditProduct(@ModelAttribute Product product,
-                                     @ModelAttribute("groupId") Long groupId,
-                                     @ModelAttribute("productAmountChange") Long productAmountChange,
-                                     Model model) {
-        synchronized (productService){
-            Product upToDate = productService.findProductById(product.getId());
-//            if (!upToDate.equals(product)){
-//                List<String> err = new ArrayList<>();
-//                err.add("Product wasn't up-to-date. Try now.");
-//                model.addAttribute("errors", err);
-//                return editProduct(product.getId(), model);
-//            }
-            product.setGroup(groupService.findGroupById(groupId));
-            upToDate.changeAmount(productAmountChange);
-            product.setAmount(upToDate.getAmount());
-
-            Response<Product> productResponse = productService.update(product);
-            if (!productResponse.isOkay()) {
-                model.addAttribute("errors", productResponse.getErrorMessage());
-                return editProduct(product.getId(), model);
-            }
+    public String requestEditProduct(@ModelAttribute Product product, @ModelAttribute("groupId") Long groupId, Model model) {
+        product.setGroup(groupService.findGroupById(groupId));
+        Response<Product> productResponse = productService.update(product);
+        if (!productResponse.isOkay()) {
+            model.addAttribute("errors", productResponse.getErrorMessage());
+            return editProduct(product.getId(), model);
         }
         return "redirect:/products";
     }
@@ -199,4 +160,39 @@ public class ApplicationController {
         return "redirect:/products";
     }
 
+    @GetMapping("/arrival-product")
+    public String openAcceptMoreProductPage(@ModelAttribute("productID") long productId, Model model){
+        Product product = productService.findProductById(productId);
+        model.addAttribute("product", product);
+        model.addAttribute("arrivedAmount", 0L);
+        return "arrival-product";
+    }
+
+    @PostMapping("/arrival-product")
+    public String acceptMoreProduct(@ModelAttribute("productID") long id, @ModelAttribute("arrivedAmount") long amount, Model model) {
+        Response<Product> productResponse = productService.addProductAmount(id, amount);
+        if (!productResponse.isOkay()) {
+            model.addAttribute("errors", productResponse.getErrorMessage());
+            return openAcceptMoreProductPage(id, model);
+        }
+        return "redirect:/products";
+    }
+
+    @GetMapping("/withdraw-product")
+    public String openWithdrawProductPage(@ModelAttribute("productID") long productId, Model model){
+        Product product = productService.findProductById(productId);
+        model.addAttribute("product", product);
+        model.addAttribute("withdrawnAmount", 0L);
+        return "withdraw-product";
+    }
+
+    @PostMapping("/withdraw-product")
+    public String withdrawProductPage(@ModelAttribute("productID") long id, @ModelAttribute("withdrawnAmount") long amount, Model model) {
+        Response<Product> productResponse = productService.withdrawProduct(id, amount);
+        if (!productResponse.isOkay()) {
+            model.addAttribute("errors", productResponse.getErrorMessage());
+            return openWithdrawProductPage(id, model);
+        }
+        return "redirect:/products";
+    }
 }

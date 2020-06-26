@@ -2,8 +2,6 @@ package ua.edu.ukma.distedu.storage.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import ua.edu.ukma.distedu.storage.persistence.model.Group;
 import ua.edu.ukma.distedu.storage.persistence.model.Product;
@@ -11,9 +9,11 @@ import ua.edu.ukma.distedu.storage.persistence.model.Response;
 import ua.edu.ukma.distedu.storage.persistence.repository.ProductRepository;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -79,19 +79,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findProductByIdAsList(long id) {
+        return productRepository.findAllById(id);
+    }
+
+    @Override
     public List<Product> findAllByGroup(Group group) {
         return productRepository.findAllByGroup(group);
     }
 
     @Override
-    public List<Product> findByName(String name) {
-        ExampleMatcher matcher = ExampleMatcher.matchingAny()
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-        Example<Product> example = Example.of(
-                new Product(name, null, "", 0, 0, ""),
-                matcher);
-//        List<Product> found = productRepository.findAll(example);
-        return productRepository.findAll(example);
+    public List<Product> findAllByGroupId(long groupId) {
+        return productRepository.findAllByGroup_Id(groupId);
     }
 
 
@@ -106,6 +105,83 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findAllByNameSnippet(String snippet) {
+        return productRepository.findProductsByNameContainsIgnoreCase(snippet);
+    }
+
+    @Override
+    public List<Product> findAllByNameSnippetAndGroup(String snippet, long groupId) {
+        return productRepository.findProductByNameContainsIgnoreCaseAndGroup_Id(snippet, groupId);
+    }
+
+    @Override
+    public List<Product> findProductByIdAndGroup(long id, long groupId) {
+        return productRepository.findProductByIdAndGroup_Id(id, groupId);
+    }
+
+    @Override
+    public List<Product> searchProduct(long groupId, long productId, String nameSnippet) {
+        List<Product> result = findAll();
+        if (productId != 0 && groupId == 0) {
+            result = findProductByIdAsList(productId);
+        } else if (productId != 0) {
+            result = findProductByIdAndGroup(productId, groupId);
+        } else if (!StringUtils.isAllBlank(nameSnippet) && groupId != 0) {
+            result = findAllByNameSnippetAndGroup(nameSnippet, groupId);
+        } else if (!StringUtils.isAllBlank(nameSnippet)) {
+            result = findAllByNameSnippet(nameSnippet);
+        } else if (groupId != 0) {
+            result = findAllByGroupId(groupId);
+        }
+        if (result == null) {
+            result = new LinkedList<>();
+        }
+
+        return result;
+    }
+
+    @Override
+    public BigDecimal findSumFotList(List<Product> products) {
+        return productRepository.sumForList(products.stream().map(Product::getId)
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public Response<Product> addProductAmount(long id, long amount) {
+        if (id == 0) {
+            return new Response<>(null, new LinkedList<>(Collections.singleton("Product can't be null")));
+        }
+        Product product = findProductById(id);
+        if (product == null) {
+            return new Response<>(product,  new LinkedList<>(Collections.singleton("Product can't be null")));
+        }
+        if (amount < 0) {
+            return new Response<>(product, new LinkedList<>(Collections.singleton("Amount can't be less than 0")));
+        }
+
+        product.setAmount(product.getAmount() + amount);
+        return new Response<>(productRepository.save(product), new LinkedList<>());
+    }
+
+    @Override
+    public Response<Product> withdrawProduct(long id, long amount) {
+        if (id == 0) {
+            return new Response<>(null, new LinkedList<>(Collections.singleton("Product can't be null")));
+        }
+        Product product = findProductById(id);
+        if (product == null) {
+            return new Response<>(null,  new LinkedList<>(Collections.singleton("Product can't be null")));
+        }
+        if (amount > product.getAmount()) {
+            return new Response<>(product, new LinkedList<>(Collections.singleton("Can't withdraw more than existing product amount")));
+        }
+
+        product.setAmount(product.getAmount() - amount);
+        return new Response<>(productRepository.save(product), new LinkedList<>());
+    }
+
+
+    @Override
     public Response<Product> update(Product product) {
 
         List<String> errors = validateProduct(product);
@@ -115,7 +191,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product sameNameProduct = productRepository.findProductByName(product.getName());
         if (sameNameProduct != null && sameNameProduct.getId() != product.getId()) {
-            errors.add("Product with name " + product.getName() +" already exists");
+            errors.add("Product with name " + product.getName() + " already exists");
             return new Response<>(product, errors);
         }
 

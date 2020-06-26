@@ -4,6 +4,7 @@ import ua.edu.ukma.distedu.storage.persistence.model.Group;
 import ua.edu.ukma.distedu.storage.persistence.model.Product;
 import ua.edu.ukma.distedu.storage.persistence.model.Response;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
@@ -20,12 +21,27 @@ public interface ProductService {
 
     Product findProductById(long id);
 
+    List<Product> findProductByIdAsList(long id);
+
     List<Product> findAllByGroup(Group group);
 
-    List<Product> findByName(String name);
+    List<Product> findAllByGroupId(long groupId);
 
     List<Product> findAll();
 
     double findOverallCost(Product product);
 
+    List<Product> findAllByNameSnippet(String snippet);
+
+    List<Product> findAllByNameSnippetAndGroup(String snippet, long groupId);
+
+    List<Product> findProductByIdAndGroup(long id, long groupId);
+
+    List<Product> searchProduct(long groupId, long productId, String nameSnippet);
+
+    BigDecimal findSumFotList(List<Product> products);
+
+    Response<Product> addProductAmount(long id, long amount);
+
+    Response<Product> withdrawProduct(long id, long amount);
 }
