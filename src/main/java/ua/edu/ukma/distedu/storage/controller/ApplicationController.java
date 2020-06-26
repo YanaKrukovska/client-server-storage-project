@@ -185,4 +185,22 @@ public class ApplicationController {
         }
         return "redirect:/products";
     }
+
+    @GetMapping("/withdraw-product")
+    public String openWithdrawProductPage(@ModelAttribute("productID") long productId, Model model){
+        Product product = productService.findProductById(productId);
+        model.addAttribute("product", product);
+        model.addAttribute("withdrawnAmount", 0L);
+        return "withdraw-product";
+    }
+
+    @PostMapping("/withdraw-product")
+    public String withdrawProductPage(@ModelAttribute("productID") long id, @ModelAttribute("withdrawnAmount") long amount, Model model) {
+        Response<Product> productResponse = productService.withdrawProduct(id, amount);
+        if (!productResponse.isOkay()) {
+            model.addAttribute("errors", productResponse.getErrorMessage());
+            return openWithdrawProductPage(id, model);
+        }
+        return "redirect:/products";
+    }
 }

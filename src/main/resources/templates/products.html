@@ -63,6 +63,8 @@
                 <th scope="col">Amount</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
             </thead>
 
@@ -83,7 +85,14 @@
                         </button>
                     </td>
                 </form>
-
+                <form th:action="@{/withdraw-product}" method="get">
+                    <td><input type="hidden" th:value="${product.id}" name="productID">
+                        <button type="submit" class="font-weight-bold btn btn-danger btn-block"
+                                style="padding: 0; background-color: darkorange; border:none">
+                            Withdraw
+                        </button>
+                    </td>
+                </form>
                 <form th:action="@{/request-delete-product}" method="post">
                     <td><input type="hidden" th:value="${product.id}" name="productID">
                         <button type="submit" class="font-weight-bold btn btn-danger btn-block" style="padding: 0px;"

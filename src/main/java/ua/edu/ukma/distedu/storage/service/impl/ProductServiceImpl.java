@@ -163,6 +163,23 @@ public class ProductServiceImpl implements ProductService {
         return new Response<>(productRepository.save(product), new LinkedList<>());
     }
 
+    @Override
+    public Response<Product> withdrawProduct(long id, long amount) {
+        if (id == 0) {
+            return new Response<>(null, new LinkedList<>(Collections.singleton("Product can't be null")));
+        }
+        Product product = findProductById(id);
+        if (product == null) {
+            return new Response<>(null,  new LinkedList<>(Collections.singleton("Product can't be null")));
+        }
+        if (amount > product.getAmount()) {
+            return new Response<>(product, new LinkedList<>(Collections.singleton("Can't withdraw more than existing product amount")));
+        }
+
+        product.setAmount(product.getAmount() - amount);
+        return new Response<>(productRepository.save(product), new LinkedList<>());
+    }
+
 
     @Override
     public Response<Product> update(Product product) {
