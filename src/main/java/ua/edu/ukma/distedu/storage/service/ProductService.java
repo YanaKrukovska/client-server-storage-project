@@ -41,4 +41,5 @@ public interface ProductService {
 
     BigDecimal findSumFotList(List<Product> products);
 
+    Response<Product> addProductAmount(long id, long amount);
 }

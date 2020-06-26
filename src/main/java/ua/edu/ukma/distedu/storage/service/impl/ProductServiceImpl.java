@@ -146,6 +146,23 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList()));
     }
 
+    @Override
+    public Response<Product> addProductAmount(long id, long amount) {
+        if (id == 0) {
+            return new Response<>(null, new LinkedList<>(Collections.singleton("Product can't be null")));
+        }
+        Product product = findProductById(id);
+        if (product == null) {
+            return new Response<>(product,  new LinkedList<>(Collections.singleton("Product can't be null")));
+        }
+        if (amount < 0) {
+            return new Response<>(product, new LinkedList<>(Collections.singleton("Amount can't be less than 0")));
+        }
+
+        product.setAmount(product.getAmount() + amount);
+        return new Response<>(productRepository.save(product), new LinkedList<>());
+    }
+
 
     @Override
     public Response<Product> update(Product product) {

@@ -13,7 +13,6 @@ import ua.edu.ukma.distedu.storage.service.GroupService;
 import ua.edu.ukma.distedu.storage.service.ProductService;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -169,4 +168,21 @@ public class ApplicationController {
         return "redirect:/products";
     }
 
+    @GetMapping("/accept-product")
+    public String openAcceptMoreProductPage(@ModelAttribute("productID") long productId, Model model){
+        Product product = productService.findProductById(productId);
+        model.addAttribute("product", product);
+        model.addAttribute("arrivedAmount", 0L);
+        return "accept-product";
+    }
+
+    @PostMapping("/accept-product")
+    public String acceptMoreProduct(@ModelAttribute("productID") long id, @ModelAttribute("arrivedAmount") long amount, Model model) {
+        Response<Product> productResponse = productService.addProductAmount(id, amount);
+        if (!productResponse.isOkay()) {
+            model.addAttribute("errors", productResponse.getErrorMessage());
+            return openAcceptMoreProductPage(id, model);
+        }
+        return "redirect:/products";
+    }
 }
